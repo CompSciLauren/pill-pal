@@ -4,25 +4,36 @@ import { Platform, StyleSheet, Text, View } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
 export function CalendarNote(props) {
-  const {
-    todaysDate,
-    pillsTaken,
-    symptoms,
-    feelings,
-    additionalDetails,
-  } = props;
+  const { infoArray } = props;
   return (
     <View style={styles.calendarNoteInfoContainer}>
-      <View>
-        <Text style={styles.calendarNoteTitleText}>Note for {todaysDate}</Text>
+      {infoArray.map(entry => (
+        <View key={entry.id}>
+          <View>
+            <Text style={styles.calendarNoteText}>
+              Pills Taken: {entry.pillsTaken}
+            </Text>
+          </View>
 
-        <Text style={styles.calendarNoteText}>Pills Taken: {pillsTaken}</Text>
-        <Text style={styles.calendarNoteText}>Symptoms: {symptoms}</Text>
-        <Text style={styles.calendarNoteText}>Feelings: {feelings}</Text>
-        <Text style={styles.calendarNoteText}>
-          Additional Details: {additionalDetails}
-        </Text>
-      </View>
+          <View>
+            <Text style={styles.calendarNoteText}>
+              Symptoms: {entry.symptoms}
+            </Text>
+          </View>
+
+          <View>
+            <Text style={styles.calendarNoteText}>
+              Feelings: {entry.feelings}
+            </Text>
+          </View>
+
+          <View>
+            <Text style={styles.calendarNoteText}>
+              Additional Details: {entry.additionalDetails}
+            </Text>
+          </View>
+        </View>
+      ))}
 
       <View style={styles.calendarNoteEditContainer}>
         <View style={{ flexDirection: 'row' }}>
@@ -38,10 +49,6 @@ export function CalendarNote(props) {
 }
 
 CalendarNote.propTypes = {
-  /**
-   * The header that is displayed at the top to indicate what the date is for the selected calendar note.
-   */
-  todaysDate: PropTypes.string,
   /**
    * The name and quantity of every type of pill taken on the selected date.
    */
@@ -85,13 +92,13 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   calendarNoteTitleText: {
-    fontSize: 17,
+    fontSize: 12,
     color: 'rgba(70,70,70, 1)',
-    textAlign: 'center',
+    textAlign: 'right',
   },
   calendarNoteText: {
-    fontSize: 14,
-    paddingVertical: 10,
+    fontSize: 12,
+    paddingVertical: 2,
     color: 'rgba(70,70,70, 1)',
     textAlign: 'left',
   },
