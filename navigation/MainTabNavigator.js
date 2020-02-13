@@ -8,6 +8,7 @@ import {
 import TabBarIcon from '../components/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen';
 import CalendarScreen from '../screens/CalendarScreen';
+import LogAndChartsScreen from '../screens/LogAndChartsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import TodaysNoteScreen from '../screens/TodaysNoteScreen';
 
@@ -31,8 +32,8 @@ HomeStack.navigationOptions = {
       focused={focused}
       name={
         Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
+          ? `ios-home${focused ? '' : '-outline'}`
+          : 'md-home'
       }
     />
   ),
@@ -52,12 +53,31 @@ CalendarStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'}
+      name={Platform.OS === 'ios' ? 'ios-calendar' : 'md-calendar'}
     />
   ),
 };
 
 CalendarStack.path = '';
+
+const LogAndChartsStack = createStackNavigator(
+  {
+    LogAndCharts: LogAndChartsScreen,
+  },
+  config
+);
+
+LogAndChartsStack.navigationOptions = {
+  tabBarLabel: 'Log/Charts',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? 'ios-analytics' : 'md-analytics'}
+    />
+  ),
+};
+
+LogAndChartsStack.path = '';
 
 const SettingsStack = createStackNavigator(
   {
@@ -71,7 +91,7 @@ SettingsStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'}
+      name={Platform.OS === 'ios' ? 'ios-settings' : 'md-settings'}
     />
   ),
 };
@@ -81,6 +101,7 @@ SettingsStack.path = '';
 const tabNavigator = createBottomTabNavigator({
   HomeStack,
   CalendarStack,
+  LogAndChartsStack,
   SettingsStack,
 });
 
