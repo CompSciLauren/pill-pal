@@ -6,22 +6,14 @@ import { ViewEditNote } from '../components/ViewEditNote';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 /**
- * Mock data to represent pills the user is currently taking.
+ * Pills the user is currently taking.
  */
-const pills = [
-  {
-    id: 0,
-    name: 'Ibuprofen',
-    formattedTimeLeft: '12m left',
-    dosage: '2 pills',
-  },
-  {
-    id: 1,
-    name: 'Hydrocodone',
-    formattedTimeLeft: '3h 25m left',
-    dosage: '1 pill',
-  },
-];
+let pillIDs = [];
+let pillNames = [];
+let pillDosages = [];
+let pillFormattedTimeTaken = [];
+
+let pills = [];
 
 /**
  * Mock data to represent pills the user has logged so far today.
@@ -47,7 +39,91 @@ const pillsLoggedToday = [
   },
 ];
 
+let name = 'No Name';
 export default class HomeScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      Name: null,
+      PillIDs: [],
+      PillNames: [],
+      PillDosages: [],
+      PillFormattedTimeTaken: '10m left',
+    };
+    //this.userName = this.userName.bind(this);
+  }
+
+  getUserData = async () => {
+    fetch('https://pillpal-app.de/User/email@gmail.com', {
+      method: 'GET',
+    })
+      .then((response) => response.json())
+      //If response is in json then in success
+      .then((responseJson) => {
+        //Success
+        console.log(responseJson);
+        name = responseJson.Name;
+        this.setState({
+          Name: name,
+        });
+      })
+      //If response is not in json then in error
+      .catch((error) => {
+        //Error
+        console.error(error);
+      });
+  };
+
+  getCurrentPills = async () => {
+    fetch('https://pillpal-app.de/Takes/email@gmail.com', {
+      method: 'GET',
+    })
+      .then((response) => response.json())
+      //If response is in json then in success
+      .then((responseJson) => {
+        //Success
+        console.log(responseJson);
+
+        for (let i = 0; i < responseJson.length; i++) {
+          pills.push({
+            id: i,
+            name: 'loading',
+            formattedTimeLeft: '10m left',
+            dosage: 'loading',
+          });
+        }
+
+        for (let i = 0; i < responseJson.length; i++) {
+          pillIDs.push(i);
+          pillNames.push(responseJson[i].Medication_Name);
+          pillDosages.push(responseJson[i].Amount_Prescribed + ' pills');
+          pillFormattedTimeTaken.push('10m left');
+
+          pills[i].id = i;
+          pills[i].name = responseJson[i].Medication_Name;
+          pills[i].dosage = responseJson[i].Amount_Prescribed + ' pills';
+          pills[i].formattedTimeLeft = '10m left';
+        }
+
+        this.setState({
+          PillIDs: pillIDs,
+          PillNames: pillNames,
+          PillDosages: pillDosages,
+          PillFormattedTimeTaken: pillFormattedTimeTaken,
+        });
+      })
+      //If response is not in json then in error
+      .catch((error) => {
+        //Error
+        console.error(error);
+      });
+  };
+
+  componentDidMount() {
+    this.User = this.getUserData();
+    this.PillNames = this.getCurrentPills();
+  }
+
   render() {
     const { navigate } = this.props.navigation;
     return (
@@ -57,14 +133,14 @@ export default class HomeScreen extends React.Component {
           contentContainerStyle={styles.contentContainer}
         >
           <View style={styles.welcomeContainer}>
-            <Text style={styles.welcomeText}>Hello, Jordan!</Text>
+            <Text style={styles.welcomeText}>Hello, {this.state.Name}!</Text>
           </View>
-          {pills.map(pill => {
+          {pills.map((pill) => {
             return (
               <PillCard
                 key={pill.id}
                 name={pill.name}
-                formattedTimeLeft={pill.formattedTimeLeft}
+                formattedTimeLeft="10m left"
                 dosage={pill.dosage}
               />
             );
