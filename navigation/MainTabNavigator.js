@@ -81,7 +81,7 @@ LogAndChartsStack.path = '';
 
 const SettingsStack = createStackNavigator(
   {
-    Settings: SettingsScreen,
+    Settings: SettingsScreen
   },
   config
 );
@@ -99,10 +99,10 @@ SettingsStack.navigationOptions = {
 SettingsStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
-  HomeStack,
-  CalendarStack,
-  LogAndChartsStack,
-  SettingsStack,
+  Home: {screen: HomeStack},
+  Calendar: {screen: CalendarStack},
+  LogAndCharts: {screen: LogAndChartsStack},
+  Settings: {screen: SettingsStack},
 });
 
 tabNavigator.path = '';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { AsyncStorage, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SettingsTitleBox } from '../components/SettingsTitleBox';
 import { SettingsOption } from '../components/SettingsOption';
 import SwitchButton from '../components/SwitchButton';
@@ -15,7 +15,7 @@ const optionTexts = {
   option3: 'Edit Pills',
   option4: 'Alexa',
   option5: 'Dark Mode',
-  option6: 'Sign Out',
+  option6: 'Logout',
   option7: 'Help',
   option8: 'App Version'
 }
@@ -40,7 +40,12 @@ export default class SettingsScreen extends React.Component {
    }
    toggleSwitch1 = (value) => {
       this.setState({switch1Value: value})
-      console.log('Switch 1 is: ' + value)
+   }
+
+   _logout = async() => {
+     const { navigate } = this.props.navigation;
+     await AsyncStorage.clear();
+     navigate('Auth');
    }
 
   render() {
@@ -91,13 +96,15 @@ export default class SettingsScreen extends React.Component {
               </View>
             }
           />
-          <SettingsOption
-            optionText = {optionTexts.option6}
-            faIcon = {faIcons.icon6}
-            rhs = {
-              <Text style={{paddingRight: 30}}>&gt;</Text>
-            }
-          />
+          <TouchableOpacity onPress={this._logout}>
+            <SettingsOption
+              optionText = {optionTexts.option6}
+              faIcon = {faIcons.icon6}
+              rhs = {
+                <Text style={{paddingRight: 30}}>&gt;</Text>
+              }
+            />
+          </TouchableOpacity>
 
           <SettingsTitleBox titleText = {titleTexts.title2} />
 
@@ -122,7 +129,7 @@ export default class SettingsScreen extends React.Component {
 }
 
 SettingsScreen.navigationOptions = {
-  title: 'Settings',
+  title: 'Settings'
 };
 
 const styles = StyleSheet.create({
