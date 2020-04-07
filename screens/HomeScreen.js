@@ -84,13 +84,15 @@ export default class HomeScreen extends React.Component {
         //Success
         console.log(responseJson);
 
-        for (let i = 0; i < responseJson.length; i++) {
-          pills.push({
-            id: i,
-            name: 'loading',
-            formattedTimeLeft: '10m left',
-            dosage: 'loading',
-          });
+        if (pills.length == 0) {
+          for (let i = 0; i < responseJson.length; i++) {
+            pills.push({
+              id: i,
+              name: 'loading',
+              formattedTimeLeft: '10m left',
+              dosage: 'loading',
+            });
+          }
         }
 
         for (let i = 0; i < responseJson.length; i++) {
