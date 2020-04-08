@@ -11,6 +11,7 @@ import CalendarScreen from '../screens/CalendarScreen';
 import LogAndChartsScreen from '../screens/LogAndChartsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import TodaysNoteScreen from '../screens/TodaysNoteScreen';
+import AlexaScreen from '../screens/AlexaScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -81,7 +82,8 @@ LogAndChartsStack.path = '';
 
 const SettingsStack = createStackNavigator(
   {
-    Settings: SettingsScreen
+    Settings: SettingsScreen,
+    Alexa: AlexaScreen,
   },
   config
 );
@@ -99,10 +101,10 @@ SettingsStack.navigationOptions = {
 SettingsStack.path = '';
 
 const tabNavigator = createBottomTabNavigator({
-  Home: {screen: HomeStack},
-  Calendar: {screen: CalendarStack},
-  LogAndCharts: {screen: LogAndChartsStack},
-  Settings: {screen: SettingsStack},
+  Home: { screen: HomeStack },
+  Calendar: { screen: CalendarStack },
+  LogAndCharts: { screen: LogAndChartsStack },
+  Settings: { screen: SettingsStack },
 });
 
 tabNavigator.path = '';
