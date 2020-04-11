@@ -11,7 +11,9 @@ import CalendarScreen from '../screens/CalendarScreen';
 import LogAndChartsScreen from '../screens/LogAndChartsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import TodaysNoteScreen from '../screens/TodaysNoteScreen';
+import EditPillsScreen from '../screens/EditPillsScreen';
 import AlexaScreen from '../screens/AlexaScreen';
+import EditPillDataScreen from '../screens/EditPillDataScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -83,7 +85,9 @@ LogAndChartsStack.path = '';
 const SettingsStack = createStackNavigator(
   {
     Settings: SettingsScreen,
+    EditPills: EditPillsScreen,
     Alexa: AlexaScreen,
+    EditPillData: EditPillDataScreen,
   },
   config
 );

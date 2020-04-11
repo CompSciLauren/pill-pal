@@ -74,11 +74,13 @@ export default class SettingsScreen extends React.Component {
             faIcon={faIcons.icon2}
             rhs={<Text style={{ paddingRight: 30 }}>&gt;</Text>}
           />
-          <SettingsOption
-            optionText={optionTexts.option3}
-            faIcon={faIcons.icon3}
-            rhs={<Text style={{ paddingRight: 30 }}>&gt;</Text>}
-          />
+          <TouchableOpacity onPress={() => navigate('EditPills')}>
+            <SettingsOption
+              optionText={optionTexts.option3}
+              faIcon={faIcons.icon3}
+              rhs={<Text style={{ paddingRight: 30 }}>&gt;</Text>}
+            />
+          </TouchableOpacity>
           <TouchableOpacity onPress={() => navigate('Alexa')}>
             <SettingsOption
               optionText={optionTexts.option4}
@@ -116,7 +118,7 @@ export default class SettingsScreen extends React.Component {
           <SettingsOption
             optionText={optionTexts.option8}
             faIcon={faIcons.icon8}
-            rhs={<Text style={{ paddingRight: 20 }}>3.2.5</Text>}
+            rhs={<Text style={{ paddingRight: 20 }}>1.0</Text>}
           />
         </ScrollView>
       </View>
