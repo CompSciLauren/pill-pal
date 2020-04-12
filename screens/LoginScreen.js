@@ -149,7 +149,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   logo: {
-    // fontFamily: 'sans-serif-thin',
     fontSize: 80
   },
   iconContainer: {

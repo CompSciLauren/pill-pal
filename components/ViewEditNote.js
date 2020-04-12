@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   viewEditNoteButton: {
-    backgroundColor: '#1ac937',
+    backgroundColor: 'rgb(65, 142, 196)',
     borderRadius: 10,
     marginTop: 10,
     marginBottom: 10,

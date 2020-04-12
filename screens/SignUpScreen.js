@@ -226,7 +226,6 @@ export default class SignUpScreen extends React.Component {
 
 SignUpScreen.navigationOptions = {
   header: null,
-  // title: 'SignUp',
 };
 
 const styles = StyleSheet.create({
@@ -247,7 +246,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   logo: {
-    // fontFamily: 'sans-serif-thin',
     fontSize: 80
   },
   iconContainer: {
@@ -266,7 +264,6 @@ const styles = StyleSheet.create({
     paddingLeft: 12,
     paddingRight: 5,
     backgroundColor: 'rgba(0, 112, 26, 0.7)'
-    // backgroundColor: 'rgba(0, 0, 0, 0.35)'
   },
   icon: {
     fontSize: 18,

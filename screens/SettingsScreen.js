@@ -64,16 +64,20 @@ export default class SettingsScreen extends React.Component {
           contentContainerStyle={styles.contentContainer}
         >
           <SettingsTitleBox titleText={titleTexts.title1} />
+          <TouchableOpacity onPress={() => navigate('AccountDetails')}>
           <SettingsOption
             optionText={optionTexts.option1}
             faIcon={faIcons.icon1}
             rhs={<Text style={{ paddingRight: 30 }}>&gt;</Text>}
           />
+          </TouchableOpacity>
+
           <SettingsOption
             optionText={optionTexts.option2}
             faIcon={faIcons.icon2}
             rhs={<Text style={{ paddingRight: 30 }}>&gt;</Text>}
           />
+
           <TouchableOpacity onPress={() => navigate('EditPills')}>
             <SettingsOption
               optionText={optionTexts.option3}
@@ -81,6 +85,7 @@ export default class SettingsScreen extends React.Component {
               rhs={<Text style={{ paddingRight: 30 }}>&gt;</Text>}
             />
           </TouchableOpacity>
+
           <TouchableOpacity onPress={() => navigate('Alexa')}>
             <SettingsOption
               optionText={optionTexts.option4}
@@ -88,6 +93,7 @@ export default class SettingsScreen extends React.Component {
               rhs={<Text style={{ paddingRight: 30 }}>&gt;</Text>}
             />
           </TouchableOpacity>
+
           <SettingsOption
             optionText={optionTexts.option5}
             faIcon={faIcons.icon5}
@@ -100,6 +106,7 @@ export default class SettingsScreen extends React.Component {
               </View>
             }
           />
+
           <TouchableOpacity onPress={this._logout}>
             <SettingsOption
               optionText={optionTexts.option6}
@@ -110,11 +117,14 @@ export default class SettingsScreen extends React.Component {
 
           <SettingsTitleBox titleText={titleTexts.title2} />
 
+          <TouchableOpacity onPress={() => navigate('Help')}>
           <SettingsOption
             optionText={optionTexts.option7}
             faIcon={faIcons.icon7}
             rhs={<Text style={{ paddingRight: 30 }}>&gt;</Text>}
           />
+          </TouchableOpacity>
+
           <SettingsOption
             optionText={optionTexts.option8}
             faIcon={faIcons.icon8}

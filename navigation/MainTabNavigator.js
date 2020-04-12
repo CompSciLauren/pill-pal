@@ -14,6 +14,10 @@ import TodaysNoteScreen from '../screens/TodaysNoteScreen';
 import EditPillsScreen from '../screens/EditPillsScreen';
 import AlexaScreen from '../screens/AlexaScreen';
 import EditPillDataScreen from '../screens/EditPillDataScreen';
+import HelpScreen from '../screens/HelpScreen';
+import AccountDetailsScreen from '../screens/AccountDetailsScreen';
+import ViewEditAccountInfoScreen from '../screens/ViewEditAccountInfoScreen';
+import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -86,8 +90,12 @@ const SettingsStack = createStackNavigator(
   {
     Settings: SettingsScreen,
     EditPills: EditPillsScreen,
+    AccountDetails: AccountDetailsScreen,
+    ViewEditAccountInfo: ViewEditAccountInfoScreen,
+    ChangePassword: ChangePasswordScreen,
     Alexa: AlexaScreen,
     EditPillData: EditPillDataScreen,
+    Help: HelpScreen,
   },
   config
 );

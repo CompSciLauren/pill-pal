@@ -15,7 +15,7 @@ export default function useName() {
       .then((responseJson) => {
         //Success
         setIsLoading(false);
-        setName(responseJson.Name);
+        setName(responseJson.First_Name);
       })
       //If response is not in json then in error
       .catch((error) => {
