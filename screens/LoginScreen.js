@@ -1,135 +1,184 @@
-import React from 'react';
-import { AsyncStorage, Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import useAuth from '../hooks/useAuth';
 
 const { width: WIDTH } = Dimensions.get('window');
 
-export default class LoginScreen extends React.Component {
-  constructor() {
-    super();
-    this.showPass = this.showPass.bind(this);
-    this.setUsername = this.setUsername.bind(this);
-    this.setPassword = this.setPassword.bind(this);
-    this._login = this._login.bind(this);
-    this.state = {
-      inputUsername: '',
-      inputPassword: '',
-      validUsername: true,
-      validPassword: true,
-      errorTextColor: 'white',
-      loginEnabled: false,
-      showPass: true,
-      press: false
+const LoginScreen = (props) => {
+  state = {
+    validUsername: true,
+    validPassword: true,
+    errorTextColor: 'white',
+    loginEnabled: false,
+    showPass: true,
+    press: false,
+  };
+
+  const [inputUsername, setInputUsername] = useState('');
+  const [inputPassword, setInputPassword] = useState('');
+  const [validUsername, setValidUsername] = useState(true);
+  const [validPassword, setValidPassword] = useState(true);
+  const [errorTextColor, setErrorTextColor] = useState('white');
+  const [loginEnabled, setLoginEnabled] = useState(false);
+  const [press, setPress] = useState(false);
+
+  const { login, isLoggedIn, isLoading, logout } = useAuth();
+
+  setState = (anObject) => {
+    if (anObject.hasOwnProperty('inputUsername')) {
+      setInputUsername(anObject.inputUsername);
+    } else if (anObject.hasOwnProperty('inputPassword')) {
+      setInputPassword(anObject.inputPassword);
+    } else if (anObject.hasOwnProperty('validUsername')) {
+      setValidUsername(anObject.validUsername);
+    } else if (anObject.hasOwnProperty('validPassword')) {
+      setValidPassword(anObject.validPassword);
+    } else if (anObject.hasOwnProperty('errorTextColor')) {
+      setErrorTextColor(anObject.errorTextColor);
+    } else if (anObject.hasOwnProperty('loginEnabled')) {
+      setLoginEnabled(anObject.loginEnabled);
+    } else if (anObject.hasOwnProperty('press')) {
+      setPress(anObject.press);
+    } else {
+      console.log('Not a valid state option');
     }
-  }
+  };
 
   showPass = () => {
     if (this.state.press == false) {
-      this.setState({showPass: false, press: true});
+      this.setState({ showPass: false, press: true });
     } else {
-      this.setState({showPass: true, press: false});
+      this.setState({ showPass: true, press: false });
     }
-  }
+  };
 
   setUsername = (value) => {
-    this.setState({inputUsername: value});
+    this.setState({ inputUsername: value });
     if (value == '') {
-      this.setState({loginEnabled: false});
+      this.setState({ loginEnabled: false });
     } else {
-      if (this.state.inputPassword !== '')
-      {
-        this.setState({loginEnabled: true});
+      if (state.inputPassword !== '') {
+        this.setState({ loginEnabled: true });
       }
     }
-  }
+  };
 
   setPassword = (value) => {
-    this.setState({inputPassword: value});
+    this.setState({ inputPassword: value });
     if (value == '') {
-      this.setState({loginEnabled: false});
+      this.setState({ loginEnabled: false });
     } else {
-      if (this.state.inputUsername !== '')
-      {
-        this.setState({loginEnabled: true});
+      if (this.state.inputUsername !== '') {
+        this.setState({ loginEnabled: true });
       }
     }
-  }
+  };
 
-  _login = async() => {
-    const { navigate } = this.props.navigation;
-    if (!this.state.validUsername || !this.state.validPassword) {
-      this.setState({errorTextColor: 'red'});
-    } else {
-      this.setState({errorTextColor: 'white'});
-      await AsyncStorage.setItem('isLoggedIn', '1');
-      navigate('Home');
+  const { navigate } = props.navigation;
+
+  useEffect(() => {
+    let mounted = true;
+    if (mounted) {
+      if (isLoggedIn) {
+        navigate('Home');
+      }
     }
-  }
 
-  render() {
-    const { navigate } = this.props.navigation;
+    return () => (mounted = false);
+  }, [isLoggedIn]);
+
+  if (isLoading) {
     return (
-      <View style={styles.container}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.mainContainer}
-        >
-          <View style={styles.logoContainer}>
-            <Text style={styles.logo}>Pill Pal</Text>
-          </View>
-
-          <Text style={{color: this.state.errorTextColor}}>Wrong user/password combination. Please try again!</Text>
-
-          <View style={styles.inputContainer}>
-            <View style={styles.iconContainer}>
-              <FontAwesome name={'user'} style={styles.icon}/>
-            </View>
-            <TextInput
-              style={styles.input}
-              placeholder={'Username'}
-              placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
-              onChangeText={this.setUsername}
-              value={this.state.inputUsername}
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <View style={styles.iconContainer}>
-              <FontAwesome name={'lock'} style={styles.icon}/>
-            </View>
-            <TextInput
-              style={styles.input}
-              secureTextEntry={this.state.showPass}
-              placeholder={'Password'}
-              placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
-              onChangeText={this.setPassword}
-              value={this.state.inputPassword}
-            />
-
-            <TouchableOpacity style={styles.iconContainer} onPress={this.showPass}>
-              <FontAwesome name={this.state.press ? 'eye-slash' : 'eye'} style={styles.icon}/>
-            </TouchableOpacity>
-          </View>
-
-          <TouchableOpacity
-            style={this.state.loginEnabled ? styles.btnLoginEnabled : styles.btnLoginDisabled}
-            disabled={!this.state.loginEnabled}
-            onPress={this._login}>
-            <Text style={styles.btnText}>Login</Text>
-          </TouchableOpacity>
-
-          <Text>Don't have an account?</Text>
-          <Text style={{color: 'blue'}} onPress={() => navigate('SignUp')}>Sign Up Now!</Text>
-
-        </ScrollView>
+      <View>
+        <Text>Loading...</Text>
       </View>
     );
   }
-}
+
+  return (
+    <View style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.mainContainer}
+      >
+        <View style={styles.logoContainer}>
+          <Text style={styles.logo}>Pill Pal</Text>
+        </View>
+
+        <Text style={{ color: errorTextColor }}>
+          Wrong user/password combination. Please try again!
+        </Text>
+
+        <View style={styles.inputContainer}>
+          <View style={styles.iconContainer}>
+            <FontAwesome name={'user'} style={styles.icon} />
+          </View>
+          <TextInput
+            style={styles.input}
+            placeholder={'Username'}
+            placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
+            onChangeText={this.setUsername}
+            value={inputUsername}
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <View style={styles.iconContainer}>
+            <FontAwesome name={'lock'} style={styles.icon} />
+          </View>
+          <TextInput
+            style={styles.input}
+            secureTextEntry={this.state.showPass}
+            placeholder={'Password'}
+            placeholderTextColor={'rgba(255, 255, 255, 0.7)'}
+            onChangeText={this.setPassword}
+            value={inputPassword}
+          />
+
+          <TouchableOpacity
+            style={styles.iconContainer}
+            onPress={this.showPass}
+          >
+            <FontAwesome
+              name={press ? 'eye-slash' : 'eye'}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity
+          style={
+            loginEnabled ? styles.btnLoginEnabled : styles.btnLoginDisabled
+          }
+          disabled={!loginEnabled}
+          onPress={() => login(inputUsername, inputPassword)}
+        >
+          <Text style={styles.btnText}>Login</Text>
+        </TouchableOpacity>
+
+        <Text>Don't have an account?</Text>
+        <Text style={{ color: 'blue' }} onPress={() => navigate('SignUp')}>
+          Sign Up Now!
+        </Text>
+      </ScrollView>
+    </View>
+  );
+};
 
 LoginScreen.navigationOptions = {
   header: null,
 };
+
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -149,10 +198,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   logo: {
-    fontSize: 80
+    fontSize: 80,
   },
   iconContainer: {
-    width: 20
+    width: 20,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -166,17 +215,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingLeft: 12,
     paddingRight: 5,
-    backgroundColor: 'rgba(0, 112, 26, 0.7)'
+    backgroundColor: 'rgba(0, 112, 26, 0.7)',
     // backgroundColor: 'rgba(0, 0, 0, 0.35)'
   },
   icon: {
     fontSize: 18,
     color: 'rgba(0, 0, 0, 0.55)',
-    backgroundColor: 'rgba(255, 255, 255, 0)'
+    backgroundColor: 'rgba(255, 255, 255, 0)',
   },
   input: {
     flexGrow: 1,
-    color: 'white'
+    color: 'white',
   },
   btnLoginEnabled: {
     width: WIDTH - 55,
@@ -185,7 +234,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#432577',
     justifyContent: 'center',
     marginTop: 20,
-    marginBottom: 10
+    marginBottom: 10,
   },
   btnLoginDisabled: {
     width: WIDTH - 55,
@@ -194,11 +243,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'grey',
     justifyContent: 'center',
     marginTop: 20,
-    marginBottom: 10
+    marginBottom: 10,
   },
   btnText: {
     color: 'white',
     fontSize: 16,
-    textAlign: 'center'
-  }
+    textAlign: 'center',
+  },
 });

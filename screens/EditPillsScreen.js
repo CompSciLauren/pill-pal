@@ -3,12 +3,15 @@ import { Dimensions, ScrollView, StyleSheet, View, Button } from 'react-native';
 import { EditPill } from '../components/EditPill';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import useTakes from '../hooks/useTakes';
+import useAuth from '../hooks/useAuth';
 
 const { width: WIDTH } = Dimensions.get('window');
 
 const EditPillsScreen = (props) => {
-  const { takes } = useTakes('email@gmail.com');
+  const userSettings = useAuth();
+  let userID = userSettings.user ? userSettings.user.ID : null;
 
+  const { takes } = useTakes(userID);
   const { navigate } = props.navigation;
   return (
     <View style={styles.container}>
@@ -25,11 +28,14 @@ const EditPillsScreen = (props) => {
 
         {takes.map((pill) => {
           return (
-            <TouchableOpacity onPress={() => navigate('EditPillData')}>
+            <TouchableOpacity
+              key={(pill.User_ID, pill.Medication_ID)}
+              onPress={() => navigate('EditPillData')}
+            >
               <EditPill
-                key={pill.id}
-                name={pill.Medication_Name}
-                dosage={pill.Amount_Prescribed}
+                key={(pill.User_ID, pill.Medication_ID)}
+                name={pill.Display_Name}
+                dosage={`${pill.Amount_Prescribed} + pills`}
                 refill={pill.Refills}
               />
             </TouchableOpacity>

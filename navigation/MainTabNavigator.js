@@ -11,6 +11,8 @@ import CalendarScreen from '../screens/CalendarScreen';
 import LogAndChartsScreen from '../screens/LogAndChartsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import TodaysNoteScreen from '../screens/TodaysNoteScreen';
+import AddFeelingScreen from '../screens/AddFeelingScreen';
+import AddSymptomScreen from '../screens/AddSymptomScreen';
 import EditPillsScreen from '../screens/EditPillsScreen';
 import AlexaScreen from '../screens/AlexaScreen';
 import EditPillDataScreen from '../screens/EditPillDataScreen';
@@ -28,6 +30,8 @@ const HomeStack = createStackNavigator(
   {
     Home: HomeScreen,
     TodaysNote: TodaysNoteScreen,
+    AddFeeling: AddFeelingScreen,
+    AddSymptom: AddSymptomScreen,
   },
   config
 );
@@ -112,13 +116,13 @@ SettingsStack.navigationOptions = {
 
 SettingsStack.path = '';
 
-const tabNavigator = createBottomTabNavigator({
+const TabNavigator = createBottomTabNavigator({
   Home: { screen: HomeStack },
   Calendar: { screen: CalendarStack },
   LogAndCharts: { screen: LogAndChartsStack },
   Settings: { screen: SettingsStack },
 });
 
-tabNavigator.path = '';
+TabNavigator.path = '';
 
-export default tabNavigator;
+export default TabNavigator;

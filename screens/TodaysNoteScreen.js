@@ -1,77 +1,106 @@
-import React, { Component } from 'react';
-import { Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import {
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
+import moment from 'moment';
 import { SymptomsFeelings } from '../components/SymptomsFeelings';
 import { AddButton } from '../components/AddButton';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import useLog_Symptom from '../hooks/useLog_Symptom';
+import useLog_Feeling from '../hooks/useLog_Feeling';
+import useAuth from '../hooks/useAuth';
 
-const symptomsAndFeelings = {
-  symptom1: 'Headache',
-  symptom2: 'Dizziness',
-  symptom3: 'Nausea',
-  feeling1: 'Worried',
-  feeling2: 'Stressed',
-  feeling3: 'Sad',
-  feeling4: 'Tired'
-}
+const TodaysNoteScreen = (props) => {
+  const userSettings = useAuth();
+  let userID = userSettings.user ? userSettings.user.ID : null;
 
-export default class TodaysNoteScreen extends Component {
-  state = { isFocused: false }
-  handleInputFocus = () => this.setState({ isFocused: true })
-  handleInputBlur = () => this.setState({ isFocused: false })
-  render() {
-    const { isFocused } = this.state
+  let todaysDate = moment().format('YYYY-MM-DD');
+  const { symptom } = useLog_Symptom(userID, todaysDate);
+  const { feeling } = useLog_Feeling(userID, todaysDate);
 
-    return (
-      <View style={styles.container}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}
-        >
-          <View style={styles.headerContainer}>
-            <Text style={styles.headerText}>Additional Details</Text>
-              <View style={ isFocused ? styles.addDetContainerFocused: styles.addDetContainerBlurred } >
-              <TextInput
-                onFocus={this.handleInputFocus}
-                onBlur={this.handleInputBlur}
-                style={styles.addDet}
-                placeholder="Notes"
-                placeholderTextColor="grey"
-                numberOfLines={5}
-                multiline={true}
-              />
-            </View>
+  state = { isFocused: false };
+  handleInputFocus = () => this.setState({ isFocused: true });
+  handleInputBlur = () => this.setState({ isFocused: false });
+  const { isFocused } = this.state;
 
-            <View style={styles.titleContainer}>
-                <Text style={styles.headerText}>Symptoms</Text>
-                <AddButton/>
-            </View>
-
-            <View style={styles.symptomsFeelingsContainer}>
-              <SymptomsFeelings symptomOrFeeling={symptomsAndFeelings.symptom1} />
-              <SymptomsFeelings symptomOrFeeling={symptomsAndFeelings.symptom2} />
-              <SymptomsFeelings symptomOrFeeling={symptomsAndFeelings.symptom3} />
-            </View>
-
-            <View style={styles.titleContainer}>
-              <Text style={styles.headerText}>Feelings</Text>
-              <AddButton/>
-            </View>
-
-            <View style={styles.symptomsFeelingsContainer}>
-              <SymptomsFeelings symptomOrFeeling={symptomsAndFeelings.feeling1} />
-              <SymptomsFeelings symptomOrFeeling={symptomsAndFeelings.feeling2} />
-              <SymptomsFeelings symptomOrFeeling={symptomsAndFeelings.feeling3} />
-              <SymptomsFeelings symptomOrFeeling={symptomsAndFeelings.feeling4} />
-            </View>
+  const { navigate } = props.navigation;
+  return (
+    <View style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+      >
+        <View style={styles.headerContainer}>
+          <Text style={styles.headerText}>Additional Details</Text>
+          <View
+            style={
+              isFocused
+                ? styles.addDetContainerFocused
+                : styles.addDetContainerBlurred
+            }
+          >
+            <TextInput
+              onFocus={this.handleInputFocus}
+              onBlur={this.handleInputBlur}
+              style={styles.addDet}
+              placeholder="Notes"
+              placeholderTextColor="grey"
+              numberOfLines={5}
+              multiline={true}
+            />
           </View>
-        </ScrollView>
-      </View>
-    );
-  }
-}
+
+          <View style={styles.titleContainer}>
+            <Text style={styles.headerText}>Symptoms</Text>
+            <TouchableOpacity onPress={() => navigate('AddSymptom')}>
+              <AddButton />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.symptomsFeelingsContainer}>
+            {symptom.map((symptom) => {
+              return (
+                <SymptomsFeelings
+                  key={(symptom.UserID, symptom.Date, symptom.Symptom_ID)}
+                  symptomOrFeeling={symptom.Display_Name}
+                />
+              );
+            })}
+          </View>
+
+          <View style={styles.titleContainer}>
+            <Text style={styles.headerText}>Feelings</Text>
+            <TouchableOpacity onPress={() => navigate('AddFeeling')}>
+              <AddButton />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.symptomsFeelingsContainer}>
+            {feeling.map((feeling) => {
+              return (
+                <SymptomsFeelings
+                  key={(feeling.UserID, feeling.Date, feeling.Feeling_ID)}
+                  symptomOrFeeling={feeling.Display_Name}
+                />
+              );
+            })}
+          </View>
+        </View>
+      </ScrollView>
+    </View>
+  );
+};
 
 TodaysNoteScreen.navigationOptions = {
   title: "Today's Note",
 };
+
+export default TodaysNoteScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -95,7 +124,7 @@ const styles = StyleSheet.create({
   symptomsFeelingsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
   },
   addDetContainerBlurred: {
     backgroundColor: 'white',
@@ -147,5 +176,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     paddingVertical: 7,
-  }
+  },
 });

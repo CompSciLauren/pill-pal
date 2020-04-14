@@ -6,6 +6,7 @@ import { ViewEditNote } from '../components/ViewEditNote';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import useName from '../hooks/useName';
 import useTakes from '../hooks/useTakes';
+import useAuth from '../hooks/useAuth';
 
 /**
  * Mock data to represent pills the user has logged so far today.
@@ -32,10 +33,14 @@ const pillsLoggedToday = [
 ];
 
 const HomeScreen = (props) => {
-  const { name } = useName();
-  const { takes } = useTakes('email@gmail.com');
+  const userSettings = useAuth();
+  let userID = userSettings.user ? userSettings.user.ID : null;
+
+  const { name } = useName(userID);
+  const { takes } = useTakes(userID);
 
   const { navigate } = props.navigation;
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -43,15 +48,15 @@ const HomeScreen = (props) => {
         contentContainerStyle={styles.contentContainer}
       >
         <View style={styles.welcomeContainer}>
-          <Text style={styles.welcomeText}>Hello {name}!</Text>
+          <Text style={styles.welcomeText}>Hello, {name.First_Name}!</Text>
         </View>
         {takes.map((pill) => {
           return (
             <PillCard
-              key={pill.id}
-              name={pill.Medication_Name}
+              key={(pill.User_ID, pill.Medication_ID)}
+              name={pill.Display_Name}
               formattedTimeLeft="10m left"
-              dosage={pill.Dosage}
+              dosage={`${pill.Amount_Prescribed} pills`}
             />
           );
         })}

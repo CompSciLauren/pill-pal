@@ -40,7 +40,7 @@ EditPill.propTypes = {
   /**
    * The amount of time left before the user needs to take their next medication.
    */
-  dosage: PropTypes.number,
+  dosage: PropTypes.string,
   /**
    * The quantity of pills to be taken.
    */

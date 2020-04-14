@@ -1,28 +1,30 @@
 import { useState, useEffect } from 'react';
 
-export default function useName() {
-  const [name, setName] = useState(null);
+export default function useName(personIdentifier) {
+  const [name, setName] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsLoading(true);
 
-    fetch('https://pillpal-app.de/User/email@gmail.com', {
-      method: 'GET',
-    })
-      .then((response) => response.json())
-      //If response is in json then in success
-      .then((responseJson) => {
-        //Success
-        setIsLoading(false);
-        setName(responseJson.First_Name);
+    if (personIdentifier !== null) {
+      fetch(`https://pillpal-app.de/User/${personIdentifier}`, {
+        method: 'GET',
       })
-      //If response is not in json then in error
-      .catch((error) => {
-        //Error
-        console.error(error);
-      });
-  }, []);
+        .then((response) => response.json())
+        //If response is in json then in success
+        .then((responseJson) => {
+          //Success
+          setIsLoading(false);
+          setName(responseJson[0]);
+        })
+        //If response is not in json then in error
+        .catch((error) => {
+          //Error
+          console.error(error);
+        });
+    }
+  }, [personIdentifier]);
 
   return {
     name,
