@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LineChart, StackedBarChart } from 'react-native-chart-kit';
+import useWeight from '../hooks/useWeight';
+import useAuth from '../hooks/useAuth';
+import useName from '../hooks/useName';
 const screenWidth = Dimensions.get('window').width;
 
 const emotionData = {
@@ -21,8 +24,16 @@ const weightData = {
   ],
 };
 
-export default class LogAndChartsScreen extends Component {
-  render() {
+const LogAndChartsScreen = (props) => {
+  const userSettings = useAuth();
+  let userID = userSettings.user ? userSettings.user.ID : null;
+  //console.log(userSettings)
+  const { name } = useName(userID);
+  const { weightLive } = useWeight(userID);
+  let w = weightLive;
+
+  console.log(w);
+
     return (
       <View style={styles.container}>
         <ScrollView
@@ -93,12 +104,13 @@ export default class LogAndChartsScreen extends Component {
         </ScrollView>
       </View>
     );
-  }
 }
 
 LogAndChartsScreen.navigationOptions = {
   title: 'Log/Charts',
 };
+
+export default LogAndChartsScreen;
 
 const styles = StyleSheet.create({
   container: {
