@@ -20,8 +20,80 @@ const TodaysNoteScreen = (props) => {
   let userID = userSettings.user ? userSettings.user.ID : null;
 
   let todaysDate = moment().format('YYYY-MM-DD');
-  const { symptom } = useLog_Symptom(userID, todaysDate);
-  const { feeling } = useLog_Feeling(userID, todaysDate);
+  const { symptom } = useLog_Symptom(userID);
+  const { feeling } = useLog_Feeling(userID);
+
+  let userSymptomsHistory = symptom.map((symptom) => {
+    return [symptom.Date, symptom.Symptom_ID, symptom.Display_Name];
+  });
+
+  let userFeelingsHistory = feeling.map((feeling) => {
+    return [feeling.Date, feeling.Feeling_ID, feeling.Display_Name];
+  });
+
+  const findSymptomsToday = (tempStartDate) => {
+    let symptomIDsAndDisplayNames = [];
+    for (let i = 0; i < userSymptomsHistory.length; i++) {
+      if (userSymptomsHistory[i][0].includes(tempStartDate)) {
+        symptomIDsAndDisplayNames.push(userSymptomsHistory[i][2]);
+      }
+    }
+
+    if (symptomIDsAndDisplayNames == '') {
+      symptomIDsAndDisplayNames.push('none');
+    }
+    return symptomIDsAndDisplayNames;
+  };
+
+  const findSymptomIDsToday = (tempStartDate) => {
+    let symptomIDsAndDisplayNames = [];
+    for (let i = 0; i < userSymptomsHistory.length; i++) {
+      if (userSymptomsHistory[i][0].includes(tempStartDate)) {
+        symptomIDsAndDisplayNames.push(userSymptomsHistory[i][1]);
+      }
+    }
+
+    if (symptomIDsAndDisplayNames == '') {
+      symptomIDsAndDisplayNames.push(-1);
+    }
+    return symptomIDsAndDisplayNames;
+  };
+
+  const findFeelingsToday = (tempStartDate) => {
+    let feelingIDsAndDisplayNames = [];
+    for (let i = 0; i < userFeelingsHistory.length; i++) {
+      if (userFeelingsHistory[i][0].includes(tempStartDate)) {
+        feelingIDsAndDisplayNames.push(userFeelingsHistory[i][2]);
+      }
+    }
+
+    if (feelingIDsAndDisplayNames == '') {
+      feelingIDsAndDisplayNames.push('none');
+    }
+    return feelingIDsAndDisplayNames;
+  };
+
+  const findFeelingIDsToday = (tempStartDate) => {
+    let feelingIDsAndDisplayNames = [];
+    for (let i = 0; i < userFeelingsHistory.length; i++) {
+      if (userFeelingsHistory[i][0].includes(tempStartDate)) {
+        feelingIDsAndDisplayNames.push(userFeelingsHistory[i][1]);
+      }
+    }
+
+    if (feelingIDsAndDisplayNames == '') {
+      feelingIDsAndDisplayNames.push(-1);
+    }
+    return feelingIDsAndDisplayNames;
+  };
+
+  // Find symptoms from today
+  let symptomDisplayNames = findSymptomsToday(todaysDate);
+  let symptomIDs = findSymptomIDsToday(todaysDate);
+
+  // Find feelings from today
+  let feelingDisplayNames = findFeelingsToday(todaysDate);
+  let feelingIDs = findFeelingIDsToday(todaysDate);
 
   state = { isFocused: false };
   handleInputFocus = () => this.setState({ isFocused: true });
@@ -63,11 +135,11 @@ const TodaysNoteScreen = (props) => {
           </View>
 
           <View style={styles.symptomsFeelingsContainer}>
-            {symptom.map((symptom) => {
+            {symptomDisplayNames.map((symptomDisplayNames) => {
               return (
                 <SymptomsFeelings
-                  key={(symptom.UserID, symptom.Date, symptom.Symptom_ID)}
-                  symptomOrFeeling={symptom.Display_Name}
+                  key={(userID, symptomIDs)}
+                  symptomOrFeeling={symptomDisplayNames}
                 />
               );
             })}
@@ -81,11 +153,11 @@ const TodaysNoteScreen = (props) => {
           </View>
 
           <View style={styles.symptomsFeelingsContainer}>
-            {feeling.map((feeling) => {
+            {feelingDisplayNames.map((feelingDisplayNames) => {
               return (
                 <SymptomsFeelings
-                  key={(feeling.UserID, feeling.Date, feeling.Feeling_ID)}
-                  symptomOrFeeling={feeling.Display_Name}
+                  key={(userID, feelingIDs)}
+                  symptomOrFeeling={feelingDisplayNames}
                 />
               );
             })}

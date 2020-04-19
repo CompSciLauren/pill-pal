@@ -1,18 +1,15 @@
 import { useState, useEffect } from 'react';
 
-export default function useLog_Feeling(personIdentifier, dateIdentifier) {
+export default function useLog_Feeling(personIdentifier) {
   const [feeling, setFeeling] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsLoading(true);
 
-    fetch(
-      `https://pillpal-app.de/Log_Feelings/${personIdentifier}/${dateIdentifier}`,
-      {
-        method: 'GET',
-      }
-    )
+    fetch(`https://pillpal-app.de/Log_Feelings/${personIdentifier}`, {
+      method: 'GET',
+    })
       .then((response) => response.json())
       //If response is in json then in success
       .then((responseJson) => {
@@ -25,7 +22,7 @@ export default function useLog_Feeling(personIdentifier, dateIdentifier) {
         //Error
         console.error(error);
       });
-  }, [personIdentifier, dateIdentifier]);
+  }, [personIdentifier]);
 
   return {
     feeling,

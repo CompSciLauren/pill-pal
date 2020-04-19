@@ -5,24 +5,26 @@ export default function useName(personIdentifier) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setIsLoading(true);
-
     if (personIdentifier !== null) {
-      fetch(`https://pillpal-app.de/User/${personIdentifier}`, {
-        method: 'GET',
-      })
-        .then((response) => response.json())
-        //If response is in json then in success
-        .then((responseJson) => {
-          //Success
-          setIsLoading(false);
-          setName(responseJson[0]);
+      setIsLoading(true);
+
+      if (personIdentifier !== null) {
+        fetch(`https://pillpal-app.de/User/${personIdentifier}`, {
+          method: 'GET',
         })
-        //If response is not in json then in error
-        .catch((error) => {
-          //Error
-          console.error(error);
-        });
+          .then((response) => response.json())
+          //If response is in json then in success
+          .then((responseJson) => {
+            //Success
+            setIsLoading(false);
+            setName(responseJson[0]);
+          })
+          //If response is not in json then in error
+          .catch((error) => {
+            //Error
+            console.error(error);
+          });
+      }
     }
   }, [personIdentifier]);
 

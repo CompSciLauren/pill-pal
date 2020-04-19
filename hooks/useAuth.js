@@ -20,8 +20,6 @@ const useAuth = (props) => {
       );
 
       const json = await response.json();
-      console.log(json);
-      console.log('userID:', json[0]);
       if (json[0]) {
         setUser(json[0]);
         setIsLoggedIn(true);
@@ -73,7 +71,6 @@ const AuthProvider = (props) => {
 
 const useAuthContext = () => {
   const authSettings = useContext(AuthContext);
-  //console.log(authSettings);
   return authSettings;
 };
 
