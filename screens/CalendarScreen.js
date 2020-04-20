@@ -1,85 +1,190 @@
-import React, { Component } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import { CalendarNote } from '../components/CalendarNote';
+import moment from 'moment';
+import useAuth from '../hooks/useAuth';
+import useCalendar from '../hooks/useCalendar';
+import useLog_Symptom from '../hooks/useLog_Symptom';
+import useLog_Feeling from '../hooks/useLog_Feeling';
+import useLog_Pills from '../hooks/useLog_Pills';
+import useMedication from '../hooks/useMedication';
 
-/**
- * Mock data to represent notes from the user.
- */
-const notes = [
-  {
-    id: 0,
-    date: null,
-    pillsTaken: 'none',
-    symptoms: 'none',
-    feelings: 'none',
-    additionalDetails: 'No notes added. Tap here to add a new note.',
-  },
-  {
-    id: 1,
-    date: 'Sat Feb 01 2020 00:00:00 GMT-0600',
-    pillsTaken: '2 Ibuprofen, 1 Hydrocodone',
-    symptoms: 'Constipation, Sweating',
-    feelings: 'Sad, Angry, Irritable',
-    additionalDetails:
-      "I was grumpy the whole day today. Maybe it's because I didn't get breakfast.",
-  },
-  {
-    id: 2,
-    date: 'Sun Feb 02 2020 00:00:00 GMT-0600',
-    pillsTaken: '2 Ibuprofen, 1 Hydrocodone',
-    symptoms: 'Headache',
-    feelings: 'Happy, Energetic',
-    additionalDetails:
-      'I was in a better mood today. I had a good breakfast and I think that helped.',
-  },
-];
+const CalendarScreen = (props) => {
+  const userSettings = useAuth();
+  let userID = userSettings.user ? userSettings.user.ID : null;
+  const { calendar } = useCalendar(userID);
+  const { symptom } = useLog_Symptom(userID);
+  const { feeling } = useLog_Feeling(userID);
+  const { logPills } = useLog_Pills(userID);
+  const { medication } = useMedication();
 
-export default class CalendarScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedStartDate: null,
-    };
-    this.onDateChange = this.onDateChange.bind(this);
-  }
+  let availableMeds = medication.map((medication) => {
+    return [medication.ID, medication.Display_Name];
+  });
 
-  onDateChange(date) {
-    this.setState({
-      selectedStartDate: date,
-    });
-  }
+  let userPillHistory = logPills.map((logPills) => {
+    return [logPills.Datetime, logPills.Medication_ID];
+  });
 
-  setCurrentNote(startDate) {
-    let currentNote = notes.filter(note => note.date == startDate);
-    if (currentNote == '') {
-      currentNote = notes.filter(note => note.id == 0);
+  let userSymptomsHistory = symptom.map((symptom) => {
+    return [symptom.Date, symptom.Display_Name];
+  });
+
+  let userFeelingsHistory = feeling.map((feeling) => {
+    return [feeling.Date, feeling.Display_Name];
+  });
+
+  let userNotesHistory = calendar.map((calendar) => {
+    return [calendar.Date, calendar.Note_Text];
+  });
+
+  state = {
+    selectedStartDate: '',
+  };
+
+  const [selectedStartDate, setSelectedStartDate] = useState('');
+
+  setState = (anObject) => {
+    if (anObject.hasOwnProperty('selectedStartDate')) {
+      setSelectedStartDate(anObject.selectedStartDate);
+    } else {
+      console.log('Not a valid state option');
     }
+  };
+
+  const onDateChange = (date) => {
+    if (date != '') {
+      setState({
+        selectedStartDate: date,
+      });
+    }
+  };
+
+  const findPillsTakenToday = (tempStartDate) => {
+    let medicationDisplayNames = '';
+    for (let i = 0; i < userPillHistory.length; i++) {
+      if (userPillHistory[i][0].includes(tempStartDate)) {
+        for (let j = 0; j < availableMeds.length; j++) {
+          if (userPillHistory[i][1] == availableMeds[j][0]) {
+            if (medicationDisplayNames == '') {
+              medicationDisplayNames += availableMeds[j][1];
+            } else {
+              medicationDisplayNames += ', ' + availableMeds[j][1];
+            }
+          }
+        }
+      }
+    }
+
+    if (medicationDisplayNames == '') {
+      medicationDisplayNames = 'none';
+    }
+    return medicationDisplayNames;
+  };
+
+  const findFeelingsToday = (tempStartDate) => {
+    let feelingDisplayNames = '';
+    for (let i = 0; i < userFeelingsHistory.length; i++) {
+      if (userFeelingsHistory[i][0].includes(tempStartDate)) {
+        if (feelingDisplayNames == '') {
+          feelingDisplayNames += userFeelingsHistory[i][1];
+        } else {
+          feelingDisplayNames += ', ' + userFeelingsHistory[i][1];
+        }
+      }
+    }
+
+    if (feelingDisplayNames == '') {
+      feelingDisplayNames = 'none';
+    }
+    return feelingDisplayNames;
+  };
+
+  const findSymptomsToday = (tempStartDate) => {
+    let symptomDisplayNames = '';
+    for (let i = 0; i < userSymptomsHistory.length; i++) {
+      if (userSymptomsHistory[i][0].includes(tempStartDate)) {
+        if (symptomDisplayNames == '') {
+          symptomDisplayNames += userSymptomsHistory[i][1];
+        } else {
+          symptomDisplayNames += ', ' + userSymptomsHistory[i][1];
+        }
+      }
+    }
+
+    if (symptomDisplayNames == '') {
+      symptomDisplayNames = 'none';
+    }
+    return symptomDisplayNames;
+  };
+
+  const findNoteToday = (tempStartDate) => {
+    let noteDisplayText = '';
+    for (let i = 0; i < userNotesHistory.length; i++) {
+      if (userNotesHistory[i][0].includes(tempStartDate)) {
+        noteDisplayText = userNotesHistory[i][1];
+      }
+    }
+
+    if (noteDisplayText == '') {
+      noteDisplayText = 'No notes added. Tap here to add a new note.';
+    }
+    return noteDisplayText;
+  };
+
+  function setCurrentNote(startDate) {
+    let copyOfStartDate = startDate;
+    let tempStartDate = moment(copyOfStartDate).format('YYYY-MM-DD');
+
+    // Find pills from today
+    let medicationDisplayNames = findPillsTakenToday(tempStartDate);
+
+    // Find feelings from today
+    let feelingDisplayNames = findFeelingsToday(tempStartDate);
+
+    // Find symptoms from today
+    let symptomDisplayNames = findSymptomsToday(tempStartDate);
+
+    // Find note from today
+    let noteDisplayText = findNoteToday(tempStartDate);
+
+    const note = [
+      {
+        id: 0,
+        date: startDate,
+        pillsTaken: medicationDisplayNames,
+        symptoms: symptomDisplayNames,
+        feelings: feelingDisplayNames,
+        additionalDetails: noteDisplayText,
+      },
+    ];
+
+    currentNote = note.filter((note) => note.id == 0);
 
     return currentNote;
   }
 
-  render() {
-    const { selectedStartDate } = this.state;
-    const startDate = selectedStartDate ? selectedStartDate.toString() : '';
-    return (
-      <View style={styles.container}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}
-        >
-          <CalendarPicker onDateChange={this.onDateChange} />
+  let startDate = selectedStartDate ? selectedStartDate : moment();
+  return (
+    <View style={styles.container}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.contentContainer}
+      >
+        <CalendarPicker onDateChange={onDateChange} />
 
-          <CalendarNote infoArray={this.setCurrentNote(startDate)} />
-        </ScrollView>
-      </View>
-    );
-  }
-}
+        <CalendarNote infoArray={setCurrentNote(startDate)} />
+      </ScrollView>
+    </View>
+  );
+};
 
 CalendarScreen.navigationOptions = {
   title: 'Calendar',
 };
+
+export default CalendarScreen;
 
 const styles = StyleSheet.create({
   container: {

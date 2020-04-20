@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+
+const { width: WIDTH } = Dimensions.get('window');
 
 export function CalendarNote(props) {
   const { infoArray } = props;
   return (
     <View style={styles.calendarNoteInfoContainer}>
-      {infoArray.map(entry => (
+      {infoArray.map((entry) => (
         <View key={entry.id}>
           <View>
             <Text style={styles.calendarNoteText}>
@@ -73,6 +75,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     marginLeft: 15,
     marginRight: 15,
+    width: WIDTH - 25,
     ...Platform.select({
       ios: {
         shadowColor: 'black',
