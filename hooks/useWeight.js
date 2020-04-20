@@ -6,43 +6,30 @@ export default function useWeight(personIdentifier) {
   const [weight, setWeight] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const emptyJson = {
+    ID: -1,
+    Display_Name: 'none',
+  };
+
   useEffect(() => {
     if (personIdentifier !== null) {
       setIsLoading(true);
 
-      fetch(`https://pillpal-app.de/Log_BMI/`, {
+      fetch(`https://pillpal-app.de/Log_BMI/${personIdentifier}`, {
         method: 'GET',
       })
         .then((response) => response.json())
         //If response is in json then in success
         .then((responseJson) => {
           //Success
-          //console.log(responseJson)
+
           setIsLoading(false);
-          //setWeight(responseJson);
-          //console.log(responseJson[0].User_ID)
-          //console.log(responseJson.length)
-
-          var weightArr = [];
-          var dateArr = [];
-          var final = new Array(responseJson.length);
-
-          for (var i = 0; i < responseJson.length; i++) {
-            final[i] = new Array(2);
+          if (responseJson[0] != null) {
+            setWeight(responseJson);
+          } else {
+            setWeight(emptyJson);
           }
 
-          for(var i = 0; i < responseJson.length; i++){
-              var k = responseJson[i].Weight;
-              var j = responseJson[i].Date;
-              final[i][0] = String(k);
-              final[i][1] = String(j);
-              weightArr.push(k);
-              dateArr.push(j);
-              console.log(final[i][0]);
-              console.log(final[i][1]);
-          }
-          setWeight(final);
-         // wieght = final;
         })
         //If response is not in json then in error
         .catch((error) => {

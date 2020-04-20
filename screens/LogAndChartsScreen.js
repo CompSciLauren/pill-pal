@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LineChart, StackedBarChart } from 'react-native-chart-kit';
-import useWeight from '../hooks/useWeight';
 import useAuth from '../hooks/useAuth';
 import useName from '../hooks/useName';
+import useWeight from '../hooks/useWeight';
 const screenWidth = Dimensions.get('window').width;
 
-const emotionData = {
+let emotionData = {
   labels: ['Worried', 'Stressed', 'Sad', 'Tired'],
   datasets: [
     {
@@ -15,7 +15,7 @@ const emotionData = {
   ],
 };
 
-const weightData = {
+let weightData = {
   labels: ['3/11', '3/14', '3/17', '3/20'],
   datasets: [
     {
@@ -29,10 +29,38 @@ const LogAndChartsScreen = (props) => {
   let userID = userSettings.user ? userSettings.user.ID : null;
   //console.log(userSettings)
   const { name } = useName(userID);
-  const { weightLive } = useWeight(userID);
-  let w = weightLive;
+  const weight = useWeight(name);
+  var responseJson = weight.weight;
+  var weightArr = [];
+  var dateArr = [];
+  var final = new Array(responseJson.length);
+  let w = [];
+  let dates = [];
+  for (var i = 0; i < responseJson.length; i++) {
+    final[i] = new Array(2);
+  }
+  for(var i = 0; i < responseJson.length; i++){
+      var k = responseJson[i].Weight;
+      var j = responseJson[i].Date;
 
-  console.log(w);
+      var l = j.substring(0, j.length-14);
+      var m = j.substring(5, l.length);
+      final[i][0] = String(k);
+      final[i][1] = String(m);
+      weightArr.push(k);
+      dateArr.push(m);
+  }
+  weightArr.push(135);
+  dateArr.push('04-19');
+  weightArr.push(144);
+  dateArr.push('04-20');
+
+  console.log(weightArr);
+  console.log(dateArr);
+  weightData.labels = dateArr;
+  weightData.datasets.data = weightArr;
+  console.log(weightData);
+  console.log(weightData.datasets.data);
 
     return (
       <View style={styles.container}>
@@ -78,7 +106,14 @@ const LogAndChartsScreen = (props) => {
           </View>
           <LineChart
             style={{ marginVertical: 8, borderRadius: 16 }}
-            data={weightData}
+            data={{
+              labels: dateArr,
+              datasets: [
+                {
+                  data: weightArr
+                }
+              ]
+            }}
             width={screenWidth}
             height={250}
             verticalLabelRotation={0}
