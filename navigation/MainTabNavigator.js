@@ -11,6 +11,15 @@ import CalendarScreen from '../screens/CalendarScreen';
 import LogAndChartsScreen from '../screens/LogAndChartsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import TodaysNoteScreen from '../screens/TodaysNoteScreen';
+import AddFeelingScreen from '../screens/AddFeelingScreen';
+import AddSymptomScreen from '../screens/AddSymptomScreen';
+import EditPillsScreen from '../screens/EditPillsScreen';
+import AlexaScreen from '../screens/AlexaScreen';
+import EditPillDataScreen from '../screens/EditPillDataScreen';
+import HelpScreen from '../screens/HelpScreen';
+import AccountDetailsScreen from '../screens/AccountDetailsScreen';
+import ViewEditAccountInfoScreen from '../screens/ViewEditAccountInfoScreen';
+import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 
 const config = Platform.select({
   web: { headerMode: 'screen' },
@@ -21,6 +30,8 @@ const HomeStack = createStackNavigator(
   {
     Home: HomeScreen,
     TodaysNote: TodaysNoteScreen,
+    AddFeeling: AddFeelingScreen,
+    AddSymptom: AddSymptomScreen,
   },
   config
 );
@@ -31,9 +42,7 @@ HomeStack.navigationOptions = {
     <TabBarIcon
       focused={focused}
       name={
-        Platform.OS === 'ios'
-          ? `ios-home${focused ? '' : '-outline'}`
-          : 'md-home'
+        Platform.OS === 'ios' ? 'ios-home' : 'md-home'
       }
     />
   ),
@@ -82,6 +91,13 @@ LogAndChartsStack.path = '';
 const SettingsStack = createStackNavigator(
   {
     Settings: SettingsScreen,
+    EditPills: EditPillsScreen,
+    AccountDetails: AccountDetailsScreen,
+    ViewEditAccountInfo: ViewEditAccountInfoScreen,
+    ChangePassword: ChangePasswordScreen,
+    Alexa: AlexaScreen,
+    EditPillData: EditPillDataScreen,
+    Help: HelpScreen,
   },
   config
 );
@@ -98,13 +114,13 @@ SettingsStack.navigationOptions = {
 
 SettingsStack.path = '';
 
-const tabNavigator = createBottomTabNavigator({
-  HomeStack,
-  CalendarStack,
-  LogAndChartsStack,
-  SettingsStack,
+const TabNavigator = createBottomTabNavigator({
+  Home: { screen: HomeStack },
+  Calendar: { screen: CalendarStack },
+  LogAndCharts: { screen: LogAndChartsStack },
+  Settings: { screen: SettingsStack },
 });
 
-tabNavigator.path = '';
+TabNavigator.path = '';
 
-export default tabNavigator;
+export default TabNavigator;

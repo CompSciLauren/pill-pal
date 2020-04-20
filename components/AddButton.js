@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {
   Platform,
   StyleSheet,
@@ -7,25 +8,26 @@ import {
   View,
 } from 'react-native';
 
-export function ViewEditNote() {
+export function AddButton(props) {
   return (
-    <View style={styles.viewEditNoteContainer}>
-      <TouchableOpacity style={styles.viewEditNoteButton} activeOpacity={0.5}>
-        <Text style={styles.viewEditNoteText}> View/Edit Today's Note </Text>
+    <View style={styles.addButtonContainer}>
+      <TouchableOpacity style={styles.addButton} activeOpacity={0.5}>
+        <Text style={styles.addButtonText}> + </Text>
       </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  viewEditNoteContainer: {
-    paddingHorizontal: 15,
+  addButtonContainer: {
+    paddingHorizontal: 10
   },
-  viewEditNoteButton: {
-    backgroundColor: 'rgb(65, 142, 196)',
+  addButton: {
+    backgroundColor: 'rgb(217, 252, 252)',
+    borderColor: 'black',
+    borderWidth: 1,
     borderRadius: 10,
-    marginTop: 10,
-    marginBottom: 10,
+    paddingHorizontal: 10,
     justifyContent: 'center',
     alignItems: 'center',
     ...Platform.select({
@@ -40,10 +42,9 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  viewEditNoteText: {
-    fontSize: 17,
-    fontWeight: 'bold',
-    color: 'white',
-    paddingVertical: 10,
+  addButtonText: {
+    fontSize: 20,
+    color: 'black',
+    paddingVertical: 5,
   },
 });
