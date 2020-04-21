@@ -53,6 +53,7 @@ const LogAndChartsScreen = (props) => {
   var final = new Array(feelNameArr.length);
   for (var i = 0; i < feelNameArr.length; i++) {
     final[i] = new Array();
+    final[i].push(0);
   }
 
   for(var i = 0; i < feeling_Response.length; i++){
@@ -60,7 +61,7 @@ const LogAndChartsScreen = (props) => {
     var g = feeling_Response[i].Feeling_Intensity;
     var a = feelNameArr.indexOf(b);
     if(typeof(g) != undefined){
-      final[a].push(g);
+      final[a][0] += g;
     }
   }
   console.log(final);
@@ -107,7 +108,7 @@ const LogAndChartsScreen = (props) => {
             data={{
               labels: feelNameArr,
               data: final,
-              barColors: ['#33ccff', '#A569BD','#EC7063','#52BE80',''],
+              barColors: ['#3498DB', '#A569BD','#EC7063','#52BE80'],
             }}
             style={{ marginVertical: 8, borderRadius: 16 }}
             width={screenWidth}
