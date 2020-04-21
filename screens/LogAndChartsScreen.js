@@ -73,7 +73,7 @@ const LogAndChartsScreen = (props) => {
             data={{
               labels: feelNameArr,
               data: final,
-              barColors: ['#3498DB', '#A569BD','#EC7063','#52BE80'],
+              barColors: ['#3498DB', '#A569BD','#EC7063'],
             }}
             style={{ marginVertical: 8, borderRadius: 16 }}
             width={screenWidth}
