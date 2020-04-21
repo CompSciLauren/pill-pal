@@ -4,6 +4,7 @@ import { LineChart, StackedBarChart } from 'react-native-chart-kit';
 import useAuth from '../hooks/useAuth';
 import useName from '../hooks/useName';
 import useWeight from '../hooks/useWeight';
+import useLog_Feeling from '../hooks/useLog_Feeling';
 const screenWidth = Dimensions.get('window').width;
 
 let emotionData = {
@@ -30,37 +31,67 @@ const LogAndChartsScreen = (props) => {
   //console.log(userSettings)
   const { name } = useName(userID);
   const weight = useWeight(name);
+  const feeling = useLog_Feeling(name);
+
+  var feeling_Response = feeling.feeling;
+  var feelNameArr = [];
+  var feelIntensityArr = [];
+
+  for(var i = 0; i < feeling_Response.length; i++){
+      var b = feeling_Response[i].Display_Name;
+      //console.log(b);
+      var g = feeling_Response[i].Feeling_Intensity;
+      if(!feelNameArr.includes(b)){
+          feelNameArr.push(b);
+          feelIntensityArr.push(g);
+      } else {
+          var a = feelNameArr.indexOf(b);
+          feelIntensityArr[a] = feelIntensityArr[a] + g;
+      }
+  }
+
+  var final = new Array(feelNameArr.length);
+  for (var i = 0; i < feelNameArr.length; i++) {
+    final[i] = new Array();
+  }
+
+  for(var i = 0; i < feeling_Response.length; i++){
+    var b = feeling_Response[i].Display_Name;
+    var g = feeling_Response[i].Feeling_Intensity;
+    var a = feelNameArr.indexOf(b);
+    if(typeof(g) != undefined){
+      final[a].push(g);
+    }
+  }
+  console.log(final);
+  console.log("\n\n\n")
+  //console.log(feelNameArr);
+  //console.log(feelIntensityArr);
+
   var responseJson = weight.weight;
   var weightArr = [];
   var dateArr = [];
-  var final = new Array(responseJson.length);
-  let w = [];
-  let dates = [];
-  for (var i = 0; i < responseJson.length; i++) {
-    final[i] = new Array(2);
-  }
+
   for(var i = 0; i < responseJson.length; i++){
       var k = responseJson[i].Weight;
       var j = responseJson[i].Date;
 
       var l = j.substring(0, j.length-14);
       var m = j.substring(5, l.length);
-      final[i][0] = String(k);
-      final[i][1] = String(m);
       weightArr.push(k);
       dateArr.push(m);
   }
-  weightArr.push(135);
-  dateArr.push('04-19');
-  weightArr.push(144);
-  dateArr.push('04-20');
+  //weightArr.push(135);
+  //dateArr.push('04-19');
+  //weightArr.push(144);
+  //dateArr.push('04-20');
 
-  console.log(weightArr);
-  console.log(dateArr);
+  //console.log(weightArr);
+  //console.log(dateArr);
   weightData.labels = dateArr;
   weightData.datasets.data = weightArr;
-  console.log(weightData);
-  console.log(weightData.datasets.data);
+  //console.log(weightData);
+  //console.log(weightData.datasets.data);
 
     return (
       <View style={styles.container}>
@@ -74,14 +105,13 @@ const LogAndChartsScreen = (props) => {
 
           <StackedBarChart
             data={{
-              labels: ['Worried', 'Stressed', 'Sad', 'Tired'],
-              data: [[70], [45], [28], [20]],
-              barColors: ['#33ccff'],
+              labels: feelNameArr,
+              data: final,
+              barColors: ['#33ccff', '#A569BD','#EC7063','#52BE80',''],
             }}
             style={{ marginVertical: 8, borderRadius: 16 }}
             width={screenWidth}
             height={250}
-            yAxisSuffix="%"
             chartConfig={{
               backgroundColor: 'blue',
               backgroundGradientFrom: 'blue',
