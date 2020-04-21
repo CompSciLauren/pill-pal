@@ -8,7 +8,8 @@ import {
   TextInput,
   Button,
 } from 'react-native';
-
+import { styleSheetFactory } from "../themes/themes"
+import { useTheme } from "react-native-themed-styles"
 const { width: WIDTH } = Dimensions.get('window');
 
 export default class EditPillDataScreen extends Component {

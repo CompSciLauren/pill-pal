@@ -2,11 +2,13 @@ import React from 'react';
 import { useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ChangePasswordTextInput from '../components/ChangePasswordTextInput';
-
+import { styleSheetFactory } from "../themes/themes"
+import { useTheme } from "react-native-themed-styles"
 const { width: WIDTH } = Dimensions.get('window');
 
 const ChangePasswordScreen = (props) => {
 
+  const [styles] = useTheme(darkstyles)
   const [state, setState] = useState({
     currPassword: '',
     newPassword: '',
@@ -80,3 +82,29 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 });
+
+const darkstyles = styleSheetFactory(theme => ({
+  container: {
+    flex: 1,
+  },
+  mainContainer: {
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    minHeight: '100%',
+  },
+  btnUpdate: {
+    width: WIDTH - 55,
+    height: 45,
+    borderRadius: 25,
+    backgroundColor: '#432577',
+    justifyContent: 'center',
+    marginTop: 20,
+    marginBottom: 10
+  },
+  btnText: {
+    color: theme.backgroundColor,
+    fontSize: 16,
+    textAlign: 'center'
+  }
+}));

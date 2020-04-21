@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LineChart, StackedBarChart } from 'react-native-chart-kit';
 const screenWidth = Dimensions.get('window').width;
+import { styleSheetFactory } from "../themes/themes"
+import { useTheme } from "react-native-themed-styles"
 
 const emotionData = {
   labels: ['Worried', 'Stressed', 'Sad', 'Tired'],
@@ -21,9 +23,10 @@ const weightData = {
   ],
 };
 
-export default class LogAndChartsScreen extends Component {
-  render() {
+const LogAndChartsScreen = (props) => {
+  const [styles] = useTheme(darkstyles)
     return (
+      
       <View style={styles.container}>
         <ScrollView
           style={styles.container}
@@ -93,17 +96,28 @@ export default class LogAndChartsScreen extends Component {
         </ScrollView>
       </View>
     );
-  }
 }
 
 LogAndChartsScreen.navigationOptions = {
   title: 'Log/Charts',
 };
 
+export default LogAndChartsScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "black",
+  },
+  chartH_Container: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  chartH_Text: {
+    fontSize: 20,
+    color: "white",
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
   chartH_Container: {
     alignItems: 'center',
@@ -116,3 +130,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+const darkstyles = styleSheetFactory(theme => ({
+  container: {
+    flex: 1,
+    backgroundColor: theme.backgroundColor,
+  },
+  chartH_Container: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  chartH_Text: {
+    fontSize: 20,
+    color: theme.textColor,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  }
+}))

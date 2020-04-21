@@ -2,11 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Dimensions, Platform, StyleSheet, Text, View } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
+import { styleSheetFactory } from "../themes/themes"
+import { useTheme } from "react-native-themed-styles"
 
 const { width: WIDTH } = Dimensions.get('window');
 
 export function CalendarNote(props) {
   const { infoArray } = props;
+  const [styles] = useTheme(darkstyles)
   return (
     <View style={styles.calendarNoteInfoContainer}>
       {infoArray.map((entry) => (
@@ -124,3 +127,59 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
 });
+
+const darkstyles = styleSheetFactory(theme => ({
+  calendarNoteInfoContainer: {
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 15,
+    marginRight: 15,
+    width: WIDTH - 25,
+    ...Platform.select({
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: -3 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+    backgroundColor: '#fbfbfb',
+    borderRadius: 5,
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    flexDirection: 'column',
+    alignSelf: 'flex-start',
+  },
+  calendarNoteTitleText: {
+    fontSize: 12,
+    color: 'rgba(70,70,70, 1)',
+    textAlign: 'right',
+  },
+  calendarNoteText: {
+    fontSize: 12,
+    paddingVertical: 2,
+    color: 'rgba(70,70,70, 1)',
+    textAlign: 'left',
+  },
+  calendarNoteEditContainer: {
+    alignItems: 'flex-end',
+  },
+  calendarNoteEditText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    paddingTop: 20,
+    color: 'rgba(121,51,153, 1)',
+    textAlign: 'left',
+  },
+  calendarNoteEditTextIcon: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: 'rgba(121,51,153, 1)',
+    textAlign: 'left',
+    marginTop: 22,
+    marginLeft: 5,
+  },
+}));

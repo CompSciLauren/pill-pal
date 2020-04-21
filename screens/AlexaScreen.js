@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { ScrollView, StyleSheet, Text, View, FlatList } from 'react-native';
+import { styleSheetFactory } from "../themes/themes"
+import { useTheme } from "react-native-themed-styles"
 
 const DATA = [
   {

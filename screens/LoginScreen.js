@@ -10,10 +10,13 @@ import {
 } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import useAuth from '../hooks/useAuth';
+import { styleSheetFactory } from "../themes/themes"
+import { useTheme } from "react-native-themed-styles"
 
 const { width: WIDTH } = Dimensions.get('window');
 
 const LoginScreen = (props) => {
+  const [styles] = useTheme(darkstyles)
   state = {
     validUsername: true,
     validPassword: true,
@@ -251,3 +254,76 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+const darkstyles = styleSheetFactory(theme => ({
+  container: {
+    flex: 1,
+    width: null,
+    height: null,
+    backgroundColor: theme.backgroundColor,
+  },
+  mainContainer: {
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    minHeight: '100%',
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  logo: {
+    fontSize: 80,
+    color: theme.textColor
+  },
+  iconContainer: {
+    width: 20,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 10,
+    width: WIDTH - 55,
+    height: 45,
+    borderRadius: 25,
+    fontSize: 16,
+    marginTop: 10,
+    paddingLeft: 12,
+    paddingRight: 5,
+    backgroundColor: 'rgba(0, 112, 26, 0.7)',
+    // backgroundColor: 'rgba(0, 0, 0, 0.35)'
+  },
+  icon: {
+    fontSize: 18,
+    color: 'rgba(0, 0, 0, 0.55)',
+    backgroundColor: 'rgba(255, 255, 255, 0)',
+  },
+  input: {
+    flexGrow: 1,
+    color: 'white',
+  },
+  btnLoginEnabled: {
+    width: WIDTH - 55,
+    height: 45,
+    borderRadius: 25,
+    backgroundColor: '#432577',
+    justifyContent: 'center',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  btnLoginDisabled: {
+    width: WIDTH - 55,
+    height: 45,
+    borderRadius: 25,
+    backgroundColor: 'grey',
+    justifyContent: 'center',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  btnText: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+}));

@@ -10,6 +10,8 @@ import { SettingsTitleBox } from '../components/SettingsTitleBox';
 import { SettingsOption } from '../components/SettingsOption';
 import SwitchButton from '../components/SwitchButton';
 import useAuth from '../hooks/useAuth';
+import { styleSheetFactory } from "../themes/themes"
+import { useTheme } from "react-native-themed-styles"
 
 const titleTexts = {
   title1: 'My Account',
@@ -61,6 +63,14 @@ const SettingsScreen = (props) => {
     this.setState({ switch1Value: value });
   };
 
+  //HERE IS WHAT I TRIED DOING TO SWITCH IT, BUT TO NO AVAIL
+  if (switch1Value == false) {
+    const [styles] = useTheme(darkstyles, "dark")
+    }
+    else{
+    const [styles] = useTheme(darkstyles, "light")
+    }
+
   useEffect(() => {
     if (!isLoggedIn) {
       navigate('Auth');
@@ -111,8 +121,10 @@ const SettingsScreen = (props) => {
               <SwitchButton
                 toggleSwitch1={this.toggleSwitch1}
                 switch1Value={state.switch1Value}
+                //onValueChange maybe?
               />
             </View>
+
           }
         />
 
@@ -159,3 +171,15 @@ const styles = StyleSheet.create({
     minHeight: '100%',
   },
 });
+
+const darkstyles = styleSheetFactory(theme =>({
+  container: {
+    flex: 1,
+    backgroundColor: theme.backgroundColor,
+  },
+  contentContainer: {
+    minHeight: '100%',
+  },
+}));
+
+

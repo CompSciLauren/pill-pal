@@ -7,6 +7,8 @@ import {
   View,
   TouchableOpacity,
 } from 'react-native';
+import { styleSheetFactory } from "../themes/themes"
+import { useTheme } from "react-native-themed-styles"
 
 export function AddSymptomFeelingOption(props) {
   const { optionText } = props;

@@ -7,6 +7,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import useName from '../hooks/useName';
 import useTakes from '../hooks/useTakes';
 import useAuth from '../hooks/useAuth';
+import { styleSheetFactory } from "../themes/themes"
+import { useTheme } from "react-native-themed-styles"
 
 /**
  * Mock data to represent pills the user has logged so far today.
@@ -33,6 +35,7 @@ const pillsLoggedToday = [
 ];
 
 const HomeScreen = (props) => {
+  const [styles] = useTheme(darkstyles)
   const userSettings = useAuth();
   let userID = userSettings.user ? userSettings.user.ID : null;
 
@@ -100,3 +103,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+const darkstyles = styleSheetFactory(theme => ({
+  container: {
+    flex: 1,
+    backgroundColor: theme.backgroundColor,
+  },
+  contentContainer: {
+    paddingTop: 30,
+    minHeight: '100%',
+  },
+  welcomeContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  welcomeText: {
+    fontSize: 20,
+    color: theme.textColor,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+}));

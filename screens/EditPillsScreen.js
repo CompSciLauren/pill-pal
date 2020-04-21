@@ -4,10 +4,13 @@ import { EditPill } from '../components/EditPill';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import useTakes from '../hooks/useTakes';
 import useAuth from '../hooks/useAuth';
+import { styleSheetFactory } from "../themes/themes"
+import { useTheme } from "react-native-themed-styles"
 
 const { width: WIDTH } = Dimensions.get('window');
 
 const EditPillsScreen = (props) => {
+  const [styles] = useTheme(darkstyles)
   const userSettings = useAuth();
   let userID = userSettings.user ? userSettings.user.ID : null;
 
@@ -83,3 +86,35 @@ const styles = StyleSheet.create({
     width: 120,
   },
 });
+
+const darkstyles = styleSheetFactory(theme => ({
+  container: {
+    flex: 1,
+    backgroundColor: theme.backgroundColor,
+    marginHorizontal: 4,
+  },
+  textContainer: {
+    alignItems: 'center',
+    marginTop: 8,
+    marginBottom: 20,
+  },
+  titleText: {
+    fontSize: 20,
+    color: 'rgba(70,70,70, 1)',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  bodyText: {
+    fontSize: 16,
+    color: 'rgba(70,70,70, 1)',
+    fontWeight: 'normal',
+    textAlign: 'left',
+    marginTop: 8,
+  },
+  buttonContainer: {
+    marginTop: 8,
+    marginBottom: 20,
+    marginLeft: WIDTH - 150,
+    width: 120,
+  },
+}));

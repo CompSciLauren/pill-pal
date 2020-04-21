@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import CalendarPicker from 'react-native-calendar-picker';
 import { CalendarNote } from '../components/CalendarNote';
+import { styleSheetFactory } from "../themes/themes"
+import { useTheme } from "react-native-themed-styles"
 import moment from 'moment';
 import useAuth from '../hooks/useAuth';
 import useCalendar from '../hooks/useCalendar';
@@ -11,6 +13,7 @@ import useLog_Pills from '../hooks/useLog_Pills';
 import useMedication from '../hooks/useMedication';
 
 const CalendarScreen = (props) => {
+  const [styles] = useTheme(darkstyles)
   const userSettings = useAuth();
   let userID = userSettings.user ? userSettings.user.ID : null;
   const { calendar } = useCalendar(userID);
@@ -18,6 +21,7 @@ const CalendarScreen = (props) => {
   const { feeling } = useLog_Feeling(userID);
   const { logPills } = useLog_Pills(userID);
   const { medication } = useMedication();
+
 
   let availableMeds = medication.map((medication) => {
     return [medication.ID, medication.Display_Name];
@@ -164,7 +168,7 @@ const CalendarScreen = (props) => {
 
     return currentNote;
   }
-
+  
   let startDate = selectedStartDate ? selectedStartDate : moment();
   return (
     <View style={styles.container}>
@@ -178,17 +182,24 @@ const CalendarScreen = (props) => {
       </ScrollView>
     </View>
   );
-};
 
-CalendarScreen.navigationOptions = {
-  title: 'Calendar',
-};
+  }
+  CalendarScreen.navigationOptions = {
+    title: 'Calendar',
+  };
 
 export default CalendarScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
 });
+
+const darkstyles = styleSheetFactory(theme => ({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+  },
+}));
+
