@@ -7,28 +7,9 @@ import useWeight from '../hooks/useWeight';
 import useLog_Feeling from '../hooks/useLog_Feeling';
 const screenWidth = Dimensions.get('window').width;
 
-let emotionData = {
-  labels: ['Worried', 'Stressed', 'Sad', 'Tired'],
-  datasets: [
-    {
-      data: [70, 45, 28, 20],
-    },
-  ],
-};
-
-let weightData = {
-  labels: ['3/11', '3/14', '3/17', '3/20'],
-  datasets: [
-    {
-      data: [194, 192, 188, 184],
-    },
-  ],
-};
-
 const LogAndChartsScreen = (props) => {
   const userSettings = useAuth();
   let userID = userSettings.user ? userSettings.user.ID : null;
-  //console.log(userSettings)
   const { name } = useName(userID);
   const weight = useWeight(name);
   const feeling = useLog_Feeling(name);
@@ -39,7 +20,6 @@ const LogAndChartsScreen = (props) => {
 
   for(var i = 0; i < feeling_Response.length; i++){
       var b = feeling_Response[i].Display_Name;
-      //console.log(b);
       var g = feeling_Response[i].Feeling_Intensity;
       if(!feelNameArr.includes(b)){
           feelNameArr.push(b);
@@ -64,10 +44,6 @@ const LogAndChartsScreen = (props) => {
       final[a][0] += g;
     }
   }
-  console.log(final);
-  console.log("\n\n\n")
-  //console.log(feelNameArr);
-  //console.log(feelIntensityArr);
 
   var responseJson = weight.weight;
   var weightArr = [];
@@ -82,17 +58,6 @@ const LogAndChartsScreen = (props) => {
       weightArr.push(k);
       dateArr.push(m);
   }
-  //weightArr.push(135);
-  //dateArr.push('04-19');
-  //weightArr.push(144);
-  //dateArr.push('04-20');
-
-  //console.log(weightArr);
-  //console.log(dateArr);
-  weightData.labels = dateArr;
-  weightData.datasets.data = weightArr;
-  //console.log(weightData);
-  //console.log(weightData.datasets.data);
 
     return (
       <View style={styles.container}>
