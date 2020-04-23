@@ -1,14 +1,12 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, Button } from 'react-native';
 import { PillCard } from '../components/PillCard';
 import { PillsLoggedTodayCard } from '../components/PillsLoggedTodayCard';
-import { CustomButton } from '../components/CustomButton';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import useName from '../hooks/useName';
 import useTakes from '../hooks/useTakes';
 import useAuth from '../hooks/useAuth';
-import { styleSheetFactory } from "../themes/themes"
-import { useTheme } from "react-native-themed-styles"
+import { styleSheetFactory } from '../themes/themes';
+import { useTheme } from 'react-native-themed-styles';
 
 /**
  * Mock data to represent pills the user has logged so far today.
@@ -35,7 +33,7 @@ const pillsLoggedToday = [
 ];
 
 const HomeScreen = (props) => {
-  const [styles] = useTheme(darkstyles)
+  //const [styles] = useTheme(darkstyles);
   const userSettings = useAuth();
   let userID = userSettings.user ? userSettings.user.ID : null;
 
@@ -64,9 +62,15 @@ const HomeScreen = (props) => {
           );
         })}
 
-        <TouchableOpacity onPress={() => navigate('TodaysNote')}>
-          <CustomButton title="View/Edit Today's Note" />
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <Button
+            onPress={() => navigate('TodaysNote')}
+            style={styles.buttonShape}
+            title="View/Edit Today's Note"
+            color="rgb(65, 142, 196)"
+            accessibilityLabel="View or edit the note for today"
+          />
+        </View>
 
         <PillsLoggedTodayCard
           title="Pills Logged Today"
@@ -102,9 +106,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  buttonContainer: {
+    paddingHorizontal: 15,
+  },
+  buttonShape: {
+    borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 10,
+  },
 });
 
-const darkstyles = styleSheetFactory(theme => ({
+const darkstyles = styleSheetFactory((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.backgroundColor,

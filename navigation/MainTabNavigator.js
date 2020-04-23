@@ -16,6 +16,7 @@ import AddSymptomScreen from '../screens/AddSymptomScreen';
 import EditPillsScreen from '../screens/EditPillsScreen';
 import AlexaScreen from '../screens/AlexaScreen';
 import EditPillDataScreen from '../screens/EditPillDataScreen';
+import NewPillDataScreen from '../screens/NewPillDataScreen';
 import HelpScreen from '../screens/HelpScreen';
 import AccountDetailsScreen from '../screens/AccountDetailsScreen';
 import ViewEditAccountInfoScreen from '../screens/ViewEditAccountInfoScreen';
@@ -41,9 +42,7 @@ HomeStack.navigationOptions = {
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={
-        Platform.OS === 'ios' ? 'ios-home' : 'md-home'
-      }
+      name={Platform.OS === 'ios' ? 'ios-home' : 'md-home'}
     />
   ),
 };
@@ -97,6 +96,7 @@ const SettingsStack = createStackNavigator(
     ChangePassword: ChangePasswordScreen,
     Alexa: AlexaScreen,
     EditPillData: EditPillDataScreen,
+    NewPillData: NewPillDataScreen,
     Help: HelpScreen,
   },
   config

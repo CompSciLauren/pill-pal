@@ -6,11 +6,10 @@ import {
   Text,
   TextInput,
   View,
+  Button,
 } from 'react-native';
 import moment from 'moment';
 import { SymptomsFeelings } from '../components/SymptomsFeelings';
-import { AddButton } from '../components/AddButton';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import useLog_Symptom from '../hooks/useLog_Symptom';
 import useLog_Feeling from '../hooks/useLog_Feeling';
 import useAuth from '../hooks/useAuth';
@@ -192,15 +191,19 @@ const TodaysNoteScreen = (props) => {
 
           <View style={styles.titleContainer}>
             <Text style={styles.headerText}>Symptoms</Text>
-            <TouchableOpacity
-              onPress={() =>
-                navigate('AddSymptom', {
-                  listOfTodaysSymptoms: state.listOfTodaysSymptoms,
-                })
-              }
-            >
-              <AddButton />
-            </TouchableOpacity>
+            <View style={styles.buttonContainer}>
+              <Button
+                onPress={() =>
+                  navigate('AddSymptom', {
+                    listOfTodaysSymptoms: state.listOfTodaysSymptoms,
+                  })
+                }
+                style={styles.buttonShape}
+                title="+"
+                color="rgb(65, 142, 196)"
+                accessibilityLabel="Add and edit symptoms for today"
+              />
+            </View>
           </View>
 
           <View style={styles.symptomsFeelingsContainer}>
@@ -216,15 +219,19 @@ const TodaysNoteScreen = (props) => {
 
           <View style={styles.titleContainer}>
             <Text style={styles.headerText}>Feelings</Text>
-            <TouchableOpacity
-              onPress={() =>
-                navigate('AddFeeling', {
-                  listOfTodaysFeelings: state.listOfTodaysFeelings,
-                })
-              }
-            >
-              <AddButton />
-            </TouchableOpacity>
+            <View style={styles.buttonContainer}>
+              <Button
+                onPress={() =>
+                  navigate('AddFeeling', {
+                    listOfTodaysFeelings: state.listOfTodaysFeelings,
+                  })
+                }
+                style={styles.buttonShape}
+                title="+"
+                color="rgb(65, 142, 196)"
+                accessibilityLabel="Add and edit feelings for today"
+              />
+            </View>
           </View>
 
           <View style={styles.symptomsFeelingsContainer}>
@@ -323,5 +330,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     paddingVertical: 7,
+  },
+  buttonContainer: {
+    paddingHorizontal: 15,
+    width: 75,
+  },
+  buttonShape: {
+    borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 10,
   },
 });

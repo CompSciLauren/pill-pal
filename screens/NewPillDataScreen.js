@@ -7,18 +7,20 @@ import {
   View,
   TextInput,
   Button,
-  TouchableOpacity,
 } from 'react-native';
+import useMedication from '../hooks/useMedication';
 import { styleSheetFactory } from '../themes/themes';
 import { useTheme } from 'react-native-themed-styles';
 const { width: WIDTH } = Dimensions.get('window');
 
-const EditPillDataScreen = (props) => {
-  let userID = props.navigation.state.params.selectedPill[3][0];
-  let medication_ID = props.navigation.state.params.selectedPill[4][0];
-  let selectedPill = props.navigation.state.params.selectedPill[0][0];
-  let pillDosage = props.navigation.state.params.selectedPill[1][0];
-  let pillRefills = props.navigation.state.params.selectedPill[2][0];
+const NewPillDataScreen = (props) => {
+  const { medication } = useMedication();
+
+  let userID = props.navigation.state.params.selectedPill[0][0];
+  let medication_ID = -1;
+  let selectedPill = 'name';
+  let pillDosage = 0;
+  let pillRefills = 0;
 
   const [inputPillName, setInputPillName] = useState(selectedPill);
   const [inputDosage, setInputDosage] = useState(pillDosage);
@@ -49,7 +51,14 @@ const EditPillDataScreen = (props) => {
   };
 
   function saveChangesToDatabase() {
-    fetch(`https://pillpal-app.de/Takes/${userID}`, {
+    console.log('med:', medication);
+    for (let i = 0; i < medication.length; i++) {
+      if (medication[i].Display_Name == inputPillName) {
+        medication_ID = medication[i].ID;
+      }
+    }
+
+    fetch(`https://pillpal-app.de/Takes`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -60,18 +69,7 @@ const EditPillDataScreen = (props) => {
         Medication_ID: medication_ID,
         Amount_Prescribed: inputDosage,
         Refills: inputRefills,
-        Display_Name: inputPillName,
       }),
-    });
-  }
-
-  function deleteFromDatabase() {
-    fetch(`https://pillpal-app.de/Takes/${userID}/${medication_ID}`, {
-      method: 'DELETE',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
     });
   }
 
@@ -81,12 +79,6 @@ const EditPillDataScreen = (props) => {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       >
-        <View style={styles.textContainer}>
-          <Text style={styles.mainHeaderText}>
-            Editing Pill: {selectedPill}
-          </Text>
-        </View>
-
         <View style={styles.buttonContainer}>
           <Button
             onPress={() => saveChangesToDatabase()}
@@ -95,6 +87,13 @@ const EditPillDataScreen = (props) => {
             color="rgb(65, 142, 196)"
             accessibilityLabel="Save changes"
           />
+        </View>
+
+        <View style={styles.textContainer}>
+          <Text style={styles.headerText}>Pill Name</Text>
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput onChangeText={this.setPillName}>{selectedPill}</TextInput>
         </View>
 
         <View style={styles.textContainer}>
@@ -110,25 +109,16 @@ const EditPillDataScreen = (props) => {
         <View style={styles.inputContainer}>
           <TextInput onChangeText={this.setRefills}>{pillRefills}</TextInput>
         </View>
-        <View style={styles.buttonContainer}>
-          <Button
-            onPress={() => deleteFromDatabase()}
-            style={styles.buttonShape}
-            title="Delete Pill"
-            color="rgb(196, 64, 64)"
-            accessibilityLabel="Delete pill"
-          />
-        </View>
       </ScrollView>
     </View>
   );
 };
 
-EditPillDataScreen.navigationOptions = {
-  title: 'Edit A Pill',
+NewPillDataScreen.navigationOptions = {
+  title: 'Add New Pill',
 };
 
-export default EditPillDataScreen;
+export default NewPillDataScreen;
 
 const styles = StyleSheet.create({
   container: {

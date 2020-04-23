@@ -6,11 +6,10 @@ import {
   ScrollView,
   StyleSheet,
   View,
-  Text,
+  Button,
   TouchableOpacity,
 } from 'react-native';
 import moment from 'moment';
-import { CustomButton } from '../components/CustomButton';
 import { AddSymptomFeelingOption } from '../components/AddSymptomFeelingOption';
 import { IntensityOption } from '../components/IntensityOption';
 import useFeeling from '../hooks/useFeeling';
@@ -76,9 +75,15 @@ const AddFeelingScreen = (props) => {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       >
-        <TouchableOpacity onPress={() => saveChangesToDatabase()}>
-          <CustomButton title="Save" />
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <Button
+            onPress={() => saveChangesToDatabase()}
+            style={styles.buttonShape}
+            title="Save"
+            color="rgb(65, 142, 196)"
+            accessibilityLabel="Save changes"
+          />
+        </View>
 
         {feeling.map((individualFeeling) => {
           return (
@@ -180,11 +185,6 @@ const styles = StyleSheet.create({
     marginLeft: WIDTH - 130,
     width: 100,
   },
-  deleteButtonContainer: {
-    marginTop: 8,
-    marginBottom: 20,
-    width: 100,
-  },
   headerText: {
     fontSize: 18,
     color: 'rgba(70,70,70, 1)',
@@ -277,6 +277,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     height: 1,
   },
+  buttonContainer: {
+    paddingHorizontal: 15,
+    marginTop: 15,
+  },
+  buttonShape: {
+    borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 10,
+  },
 });
 
 const darkstyles = styleSheetFactory((theme) => ({
@@ -293,11 +302,6 @@ const darkstyles = styleSheetFactory((theme) => ({
     marginTop: 8,
     marginBottom: 20,
     marginLeft: WIDTH - 130,
-    width: 100,
-  },
-  deleteButtonContainer: {
-    marginTop: 8,
-    marginBottom: 20,
     width: 100,
   },
   headerText: {

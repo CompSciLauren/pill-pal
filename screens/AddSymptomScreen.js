@@ -6,11 +6,10 @@ import {
   ScrollView,
   StyleSheet,
   View,
-  Text,
+  Button,
   TouchableOpacity,
 } from 'react-native';
 import moment from 'moment';
-import { CustomButton } from '../components/CustomButton';
 import { AddSymptomFeelingOption } from '../components/AddSymptomFeelingOption';
 import { IntensityOption } from '../components/IntensityOption';
 import useSymptom from '../hooks/useSymptom';
@@ -76,9 +75,15 @@ const AddSymptomScreen = (props) => {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       >
-        <TouchableOpacity onPress={() => saveChangesToDatabase()}>
-          <CustomButton title="Save" />
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <Button
+            onPress={() => saveChangesToDatabase()}
+            style={styles.buttonShape}
+            title="Save"
+            color="rgb(65, 142, 196)"
+            accessibilityLabel="Save changes"
+          />
+        </View>
 
         {symptom.map((individualSymptom) => {
           return (
@@ -272,6 +277,15 @@ const styles = StyleSheet.create({
     color: 'rgba(70, 70, 70, 1)',
     paddingVertical: 10,
     textAlignVertical: 'center',
+  },
+  buttonContainer: {
+    paddingHorizontal: 15,
+    marginTop: 15,
+  },
+  buttonShape: {
+    borderRadius: 10,
+    marginTop: 10,
+    marginBottom: 10,
   },
   divider: {
     backgroundColor: 'black',
