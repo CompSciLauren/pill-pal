@@ -28,7 +28,12 @@ const TodaysNoteScreen = (props) => {
   });
 
   let userFeelingsHistory = feeling.map((feeling) => {
-    return [feeling.Date, feeling.Feeling_ID, feeling.Display_Name];
+    return [
+      feeling.Date,
+      feeling.Feeling_ID,
+      feeling.Display_Name,
+      feeling.Feeling_Intensity,
+    ];
   });
 
   const findSymptomsToday = (tempStartDate) => {
@@ -87,15 +92,73 @@ const TodaysNoteScreen = (props) => {
     return feelingIDsAndDisplayNames;
   };
 
+  const findFeelingIntensitysToday = (tempStartDate) => {
+    let feelingIDsAndDisplayNames = [];
+    for (let i = 0; i < userFeelingsHistory.length; i++) {
+      if (userFeelingsHistory[i][0].includes(tempStartDate)) {
+        feelingIDsAndDisplayNames.push(userFeelingsHistory[i][3]);
+      }
+    }
+
+    if (feelingIDsAndDisplayNames == '') {
+      feelingIDsAndDisplayNames.push(-1);
+    }
+    return feelingIDsAndDisplayNames;
+  };
+
+  const findSymptomIntensitysToday = (tempStartDate) => {
+    let symptomIDsAndDisplayNames = [];
+    for (let i = 0; i < userSymptomsHistory.length; i++) {
+      if (userSymptomsHistory[i][0].includes(tempStartDate)) {
+        symptomIDsAndDisplayNames.push(userSymptomsHistory[i][3]);
+      }
+    }
+
+    if (symptomIDsAndDisplayNames == '') {
+      symptomIDsAndDisplayNames.push(-1);
+    }
+    return symptomIDsAndDisplayNames;
+  };
+
   // Find symptoms from today
   let symptomDisplayNames = findSymptomsToday(todaysDate);
   let symptomIDs = findSymptomIDsToday(todaysDate);
+  let symptomIntensitys = findSymptomIntensitysToday(todaysDate);
 
   // Find feelings from today
   let feelingDisplayNames = findFeelingsToday(todaysDate);
   let feelingIDs = findFeelingIDsToday(todaysDate);
+  let feelingIntensitys = findFeelingIntensitysToday(todaysDate);
 
-  state = { isFocused: false };
+  let todaysFeelings = [];
+  for (let i = 0; i < feelingDisplayNames.length; i++) {
+    if (feelingIntensitys[i] == 1) {
+      feelingIntensitys[i] = 'low';
+    } else if (feelingIntensitys[i] == 2) {
+      feelingIntensitys[i] = 'medium';
+    } else {
+      feelingIntensitys[i] = 'high';
+    }
+    todaysFeelings.push([feelingDisplayNames[i], feelingIntensitys[i]]);
+  }
+
+  let todaysSymptoms = [];
+  for (let i = 0; i < symptomDisplayNames.length; i++) {
+    if (symptomIntensitys[i] == 1) {
+      symptomIntensitys[i] = 'low';
+    } else if (symptomIntensitys[i] == 2) {
+      symptomIntensitys[i] = 'medium';
+    } else {
+      symptomIntensitys[i] = 'high';
+    }
+    todaysSymptoms.push([symptomDisplayNames[i], symptomIntensitys[i]]);
+  }
+
+  state = {
+    isFocused: false,
+    listOfTodaysFeelings: todaysFeelings,
+    listOfTodaysSymptoms: todaysSymptoms,
+  };
   handleInputFocus = () => this.setState({ isFocused: true });
   handleInputBlur = () => this.setState({ isFocused: false });
   const { isFocused } = this.state;
@@ -129,7 +192,13 @@ const TodaysNoteScreen = (props) => {
 
           <View style={styles.titleContainer}>
             <Text style={styles.headerText}>Symptoms</Text>
-            <TouchableOpacity onPress={() => navigate('AddSymptom')}>
+            <TouchableOpacity
+              onPress={() =>
+                navigate('AddSymptom', {
+                  listOfTodaysSymptoms: state.listOfTodaysSymptoms,
+                })
+              }
+            >
               <AddButton />
             </TouchableOpacity>
           </View>
@@ -138,7 +207,7 @@ const TodaysNoteScreen = (props) => {
             {symptomDisplayNames.map((symptomDisplayNames) => {
               return (
                 <SymptomsFeelings
-                  key={(userID, symptomIDs)}
+                  key={(userID, 'symptom', symptomIDs)}
                   symptomOrFeeling={symptomDisplayNames}
                 />
               );
@@ -147,7 +216,13 @@ const TodaysNoteScreen = (props) => {
 
           <View style={styles.titleContainer}>
             <Text style={styles.headerText}>Feelings</Text>
-            <TouchableOpacity onPress={() => navigate('AddFeeling')}>
+            <TouchableOpacity
+              onPress={() =>
+                navigate('AddFeeling', {
+                  listOfTodaysFeelings: state.listOfTodaysFeelings,
+                })
+              }
+            >
               <AddButton />
             </TouchableOpacity>
           </View>
@@ -156,7 +231,7 @@ const TodaysNoteScreen = (props) => {
             {feelingDisplayNames.map((feelingDisplayNames) => {
               return (
                 <SymptomsFeelings
-                  key={(userID, feelingIDs)}
+                  key={(userID, 'feeling', feelingIDs)}
                   symptomOrFeeling={feelingDisplayNames}
                 />
               );

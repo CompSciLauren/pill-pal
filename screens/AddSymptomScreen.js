@@ -1,30 +1,156 @@
 import React from 'react';
-import { Dimensions, ScrollView, StyleSheet, View, Button } from 'react-native';
+import { Divider } from 'react-native-elements';
+import {
+  Platform,
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+} from 'react-native';
+import moment from 'moment';
+import { CustomButton } from '../components/CustomButton';
 import { AddSymptomFeelingOption } from '../components/AddSymptomFeelingOption';
+import { IntensityOption } from '../components/IntensityOption';
 import useSymptom from '../hooks/useSymptom';
-import { styleSheetFactory } from "../themes/themes"
-import { useTheme } from "react-native-themed-styles"
+import useAuth from '../hooks/useAuth';
+import { styleSheetFactory } from '../themes/themes';
+import { useTheme } from 'react-native-themed-styles';
 
 const { width: WIDTH } = Dimensions.get('window');
 
 const AddSymptomScreen = (props) => {
-  const [styles] = useTheme(darkstyles)
-  const { symptom } = useSymptom();
+  let todaysSymptoms = props.navigation.state.params.listOfTodaysSymptoms;
+  let originalTodaysSymptoms = todaysSymptoms;
+  let todaysDate = moment().format('YYYY-MM-DD');
+  const userSettings = useAuth();
+  let userID = userSettings.user ? userSettings.user.ID : null;
+
+  const { updateSymptom, symptom } = useSymptom(todaysSymptoms);
+
+  const severityMatches = (severityToMatch, individualSymptom) =>
+    individualSymptom.severity === severityToMatch ? 'bold' : 'normal';
+
+  function saveChangesToDatabase() {
+    let symptomsToSave = symptom;
+    let filteredSymptomsToSave = [];
+    for (let i = 0; i < symptomsToSave.length; i++) {
+      if (symptomsToSave[i].severity != '') {
+        for (let j = 0; j < originalTodaysSymptoms.length; j++) {
+          if (symptomsToSave[i].Display_Name != originalTodaysSymptoms[j][0]) {
+            if (symptomsToSave[i].severity == 'low') {
+              symptomsToSave[i].severity = 1;
+            } else if (symptomsToSave[i].severity == 'medium') {
+              symptomsToSave[i].severity = 2;
+            } else {
+              symptomsToSave[i].severity = 3;
+            }
+            filteredSymptomsToSave.push([symptomsToSave[i]]);
+          }
+        }
+      }
+    }
+
+    for (let i = 0; i < filteredSymptomsToSave.length; i++) {
+      fetch(`https://pillpal-app.de/Log_Symptoms`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          User_ID: userID,
+          Date: todaysDate,
+          Symptom_ID: filteredSymptomsToSave[i][0].ID,
+          Symptom_Intensity: filteredSymptomsToSave[i][0].severity,
+        }),
+      });
+    }
+  }
+
+  //const [styles] = useTheme(darkstyles);
   return (
     <View style={styles.container}>
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       >
-        <View style={styles.saveButtonContainer}>
-          <Button title="Save"></Button>
-        </View>
-        {symptom.map((symptom) => {
+        <TouchableOpacity onPress={() => saveChangesToDatabase()}>
+          <CustomButton title="Save" />
+        </TouchableOpacity>
+
+        {symptom.map((individualSymptom) => {
           return (
-            <AddSymptomFeelingOption
-              key={symptom.ID}
-              optionText={symptom.Display_Name}
-            />
+            <View key={individualSymptom.ID}>
+              <View style={styles.optionContainer} activeOpacity={0.5}>
+                <AddSymptomFeelingOption
+                  key={individualSymptom.ID}
+                  optionText={individualSymptom.Display_Name}
+                />
+                <View
+                  style={{ flex: 1, flexDirection: 'row', marginRight: 60 }}
+                >
+                  <View style={styles.intensityContainer}>
+                    <TouchableOpacity
+                      style={styles.intensityButton}
+                      activeOpacity={0.5}
+                      onPress={() => updateSymptom('low', individualSymptom)}
+                    >
+                      <View style={styles.intensityTextContainer}>
+                        <IntensityOption
+                          key={(individualSymptom.ID, 'low')}
+                          intensityValue="low"
+                          intensitySelected={severityMatches(
+                            'low',
+                            individualSymptom
+                          )}
+                        ></IntensityOption>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+
+                  <View style={styles.intensityContainer}>
+                    <TouchableOpacity
+                      style={styles.intensityButton}
+                      activeOpacity={0.5}
+                      onPress={() => updateSymptom('medium', individualSymptom)}
+                    >
+                      <View style={styles.intensityTextContainer}>
+                        <IntensityOption
+                          key={(individualSymptom.ID, 'med')}
+                          intensityValue="med"
+                          intensitySelected={severityMatches(
+                            'medium',
+                            individualSymptom
+                          )}
+                        ></IntensityOption>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+
+                  <View style={styles.intensityContainer}>
+                    <TouchableOpacity
+                      style={styles.intensityButton}
+                      activeOpacity={0.5}
+                      onPress={() => updateSymptom('high', individualSymptom)}
+                    >
+                      <View style={styles.intensityTextContainer}>
+                        <IntensityOption
+                          key={(individualSymptom.ID, 'high')}
+                          intensityValue="high"
+                          intensitySelected={severityMatches(
+                            'high',
+                            individualSymptom
+                          )}
+                        ></IntensityOption>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+              <Divider style={styles.divider} />
+            </View>
           );
         })}
       </ScrollView>
@@ -79,9 +205,81 @@ const styles = StyleSheet.create({
     paddingRight: 5,
     backgroundColor: 'rgba(204, 255, 255, 0.7)',
   },
+  optionContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingHorizontal: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: -3 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  displayNameContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    //justifyContent: 'flex-start',
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlignVertical: 'center',
+  },
+  displayNameText: {
+    fontSize: 16,
+    color: 'black',
+  },
+  divider: {
+    backgroundColor: 'black',
+    height: 1,
+  },
+  intensityContainer: {
+    paddingHorizontal: 10,
+  },
+  intensityButton: {
+    backgroundColor: 'white',
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: { width: 0, height: -3 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  intensityTextContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    textAlignVertical: 'center',
+  },
+  intensityText: {
+    fontSize: 14,
+    color: 'rgba(70, 70, 70, 1)',
+    paddingVertical: 10,
+    textAlignVertical: 'center',
+  },
+  divider: {
+    backgroundColor: 'black',
+    height: 1,
+  },
 });
 
-const darkstyles = styleSheetFactory(theme => ({
+const darkstyles = styleSheetFactory((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.backgroundColor,

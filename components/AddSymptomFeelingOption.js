@@ -1,59 +1,15 @@
 import React from 'react';
-import { Divider } from 'react-native-elements';
-import {
-  Platform,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from 'react-native';
-import { styleSheetFactory } from "../themes/themes"
-import { useTheme } from "react-native-themed-styles"
+import { Platform, StyleSheet, Text, View } from 'react-native';
+import { styleSheetFactory } from '../themes/themes';
+import { useTheme } from 'react-native-themed-styles';
 
 export function AddSymptomFeelingOption(props) {
   const { optionText } = props;
   return (
     <View>
-      <View style={styles.optionContainer} activeOpacity={0.5}>
-        <View style={styles.displayNameContainer}>
-          <Text style={styles.displayNameText}> {optionText}</Text>
-        </View>
-        <View style={{ flex: 1, flexDirection: 'row', marginRight: 60 }}>
-          <View style={styles.intensityContainer}>
-            <TouchableOpacity
-              style={styles.intensityButton}
-              activeOpacity={0.5}
-            >
-              <View style={styles.intensityTextContainer}>
-                <Text style={styles.intensityText}>low</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.intensityContainer}>
-            <TouchableOpacity
-              style={styles.intensityButton}
-              activeOpacity={0.5}
-            >
-              <View style={styles.intensityTextContainer}>
-                <Text style={styles.intensityText}>med</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.intensityContainer}>
-            <TouchableOpacity
-              style={styles.intensityButton}
-              activeOpacity={0.5}
-            >
-              <View style={styles.intensityTextContainer}>
-                <Text style={styles.intensityText}>high</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
+      <View style={styles.displayNameContainer}>
+        <Text style={styles.displayNameText}> {optionText}</Text>
       </View>
-      <Divider style={styles.divider} />
     </View>
   );
 }

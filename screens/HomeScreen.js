@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { PillCard } from '../components/PillCard';
 import { PillsLoggedTodayCard } from '../components/PillsLoggedTodayCard';
-import { ViewEditNote } from '../components/ViewEditNote';
+import { CustomButton } from '../components/CustomButton';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import useName from '../hooks/useName';
 import useTakes from '../hooks/useTakes';
@@ -65,7 +65,7 @@ const HomeScreen = (props) => {
         })}
 
         <TouchableOpacity onPress={() => navigate('TodaysNote')}>
-          <ViewEditNote />
+          <CustomButton title="View/Edit Today's Note" />
         </TouchableOpacity>
 
         <PillsLoggedTodayCard

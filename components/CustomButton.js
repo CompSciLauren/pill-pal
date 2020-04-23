@@ -6,25 +6,26 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { styleSheetFactory } from "../themes/themes"
-import { useTheme } from "react-native-themed-styles"
+import { styleSheetFactory } from '../themes/themes';
+import { useTheme } from 'react-native-themed-styles';
 
-export function ViewEditNote() {
-  const [styles] = useTheme(darkstyles)
+export function CustomButton(props) {
+  const { title } = props;
+  const [styles] = useTheme(darkstyles);
   return (
-    <View style={styles.viewEditNoteContainer}>
-      <TouchableOpacity style={styles.viewEditNoteButton} activeOpacity={0.5}>
-        <Text style={styles.viewEditNoteText}> View/Edit Today's Note </Text>
-      </TouchableOpacity>
+    <View style={styles.customButtonContainer}>
+      <View style={styles.customButton}>
+        <Text style={styles.customButtonText}>{title}</Text>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  viewEditNoteContainer: {
+  customButtonContainer: {
     paddingHorizontal: 15,
   },
-  viewEditNoteButton: {
+  customButton: {
     backgroundColor: 'rgb(65, 142, 196)',
     borderRadius: 10,
     marginTop: 10,
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  viewEditNoteText: {
+  customButtonText: {
     fontSize: 17,
     fontWeight: 'bold',
     color: 'white',
@@ -51,11 +52,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const darkstyles = styleSheetFactory(theme => ({
-  viewEditNoteContainer: {
+const darkstyles = styleSheetFactory((theme) => ({
+  customButtonContainer: {
     paddingHorizontal: 15,
   },
-  viewEditNoteButton: {
+  customButton: {
     backgroundColor: 'rgb(65, 142, 196)',
     borderRadius: 10,
     marginTop: 10,
@@ -74,7 +75,7 @@ const darkstyles = styleSheetFactory(theme => ({
       },
     }),
   },
-  viewEditNoteText: {
+  customButtonText: {
     fontSize: 17,
     fontWeight: 'bold',
     color: 'white',
